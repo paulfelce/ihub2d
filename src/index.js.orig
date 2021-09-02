@@ -1,0 +1,2 @@
+import msg from './contents.js'
+window.alert(msg);
