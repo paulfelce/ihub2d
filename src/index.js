@@ -11,7 +11,7 @@ function appStart(){
 	DebugText = new fabric.Text('Debug Text ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(DebugText);		
 
-	var snapStart = new fabric.Rect({top:50,left:125,width:25,height:25,fill:"#000fff"});
+	var snapStart = new fabric.Rect({top:50,left:25,width:25,height:25,fill:"#000fff"});
 	canvas.add(snapStart);
 	snapTarget = snapStart;
 	
@@ -56,7 +56,7 @@ var DebugText , Debug2, DebugSnap,DebugOrientation;
 			var pointer = canvas.getPointer(o.e);
 			mouseCircle.set({left:pointer.x,top:pointer.y});
 
-
+ 
 			if(!ruler.completed)
 			{
 				ruler.setEnd(pointer,snapTarget);
@@ -87,7 +87,7 @@ var DebugText , Debug2, DebugSnap,DebugOrientation;
 					}
 					var wall = new Wall(canvas);			
 										
-					var wallContainer = wall.add(ruler)	;
+					var wallContainer = wall.add(ruler,walls[walls.length-1])	;
 					snapTarget = wallContainer.snapTarget;
 					
 					walls.push(wallContainer);
@@ -96,7 +96,7 @@ var DebugText , Debug2, DebugSnap,DebugOrientation;
 					ruler.setStart(snapTarget.left,snapTarget.top);
 				}
 				
-			
+			}
 			 /* right click to delete a wall */
 			 if(o.button ===3)
 			 {
@@ -118,9 +118,9 @@ var DebugText , Debug2, DebugSnap,DebugOrientation;
 						canvas.remove(wallContainer.text);
 						walls.pop();
 					}
-				}
+            }
 					
-			}
+			
 }
 			
 			

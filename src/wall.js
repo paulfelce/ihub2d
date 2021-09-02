@@ -3,7 +3,7 @@
 export default class Wall
 {
 
-	 orientation="";
+	 wallOrientation="";
 	 startX=0;
 	 startY=0;
 	 endX=0;
@@ -18,7 +18,7 @@ export default class Wall
 	/* user has placed the end of the wall. Put a wall in*/
 	/* pass the previous wall so we know if it's an opening or not */
 
-	add(ruler) 
+	add(ruler,prevWall) 
 	{
 		
 		this.startX = ruler.x1;
@@ -100,6 +100,23 @@ export default class Wall
 		//Add our wall and connector to the canvas
 		var fillColour = "#44d63c";
 
+		if(!(prevWall===undefined))
+		{
+			// when a wall continues in the same direction we need to flip between wall and opening
+			if(prevWall.orientation == this.wallOrientation)
+
+			if (prevWall.wall.fill == fillColour)
+			{
+				fillColour = '#7aa7f0';
+			}
+			else
+			{
+				fillColour = '#44d63c';
+			}
+		}
+
+
+
 		//fill same as border so can't see overlaps
 		var rectWall = new fabric.Rect({ stroke:fillColour,strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
 		this.canvas.add(rectWall);
@@ -116,7 +133,7 @@ export default class Wall
 
 		//Return an array of the objects so we can delete them if need be
 
-		var wallContainer = new WallContainer(rectWall,rectConnect,textX);
+		var wallContainer = new WallContainer(rectWall,rectConnect,textX,this.wallOrientation);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;
@@ -134,12 +151,14 @@ class WallContainer
 	wall;
 	snapTarget;
 	text;
+	orientation;
 
-	constructor(Wall,Snap,Text)
+	constructor(Wall,Snap,Text,wallOrientation)
 	{
 		this.wall=Wall;
 		this.snapTarget=Snap;
 		this.text = Text;
+		this.orientation = wallOrientation;
 	}
 
 }
