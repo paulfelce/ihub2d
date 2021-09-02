@@ -46,13 +46,9 @@ export default class Ruler
     }
 
 
-    setEnd(pointer,snapTarget)
+
+    setOrientation(pointer)
     {
-        /*Set orientation based on angle so we can add openings */
-        
-
-        snapTarget.set({fill:'red'});
-
         let angleDegrees= Math.atan2(pointer.y-this.y1,pointer.x-this.x1) * 180/Math.PI ;
         this.angleDegrees=angleDegrees;// just debugging. Show in debug text
         
@@ -64,12 +60,62 @@ export default class Ruler
         {
             this.orientation = 'v';
         }
+    }
+
+
+    setEnd(pointer,snapTarget)
+    {
+        /*Set orientation based on angle so we can add openings */
+        
+
+        snapTarget.set({fill:'red'});
+
+        this.setOrientation(pointer);
         
         if(!this.completed)
         {
             this.drawRuler(pointer, snapTarget);
         }
         
+    }
+
+    /* prompt user for exact line length based on current ruler length */
+    setExactEnd(snapTarget)
+    {
+        
+        
+        let pointer = this.canvas.getPointer();
+        this.setOrientation(pointer);
+        let orientation = this.orientation;//don't allow it to change when mouse moves to input box
+        
+        let exactSize = window.prompt("Enter size in mm");
+        
+        var rulerPointer = new RulerPointer(pointer.x,pointer.y);
+        
+        if(orientation=='h')
+        {
+            if(this.x2 > this.x1)
+            {
+                rulerPointer.x = this.x1 +  parseInt(exactSize);
+            }
+            else
+            {
+                rulerPointer.x = this.x1 - parseInt(exactSize);
+            }
+        }
+        else
+        {
+            if(this.y2 > this.y1)
+            {
+                rulerPointer.y = this.y1 +  parseInt(exactSize);
+            }
+            else
+            {
+                rulerPointer.y = this.y1 - parseInt(exactSize);
+            }
+        }
+
+        this.setEnd(rulerPointer,snapTarget);
     }
 
     drawRuler(pointer, snapTarget) {
@@ -182,4 +228,16 @@ export default class Ruler
     
 
 
+}
+
+
+class RulerPointer
+{
+    x;
+    y;
+    constructor(x,y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 }

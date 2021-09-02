@@ -18,9 +18,11 @@ export default class Wall
 	/* user has placed the end of the wall. Put a wall in*/
 	/* pass the previous wall so we know if it's an opening or not */
 
-	add(ruler,prevWall) 
+	add(ruler,prevWall,snapTarget) 
 	{
 		
+		ruler.setExactEnd(snapTarget);
+
 		this.startX = ruler.x1;
 		this.startY = ruler.y1;
 		this.endX = ruler.x2;

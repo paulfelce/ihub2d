@@ -86,7 +86,7 @@ var DebugText
 					}
 					var wall = new Wall(canvas);			
 										
-					var wallContainer = wall.add(ruler,walls[walls.length-1])	;
+					var wallContainer = wall.add(ruler,walls[walls.length-1],snapTarget);
 					snapTarget = wallContainer.snapTarget;
 					
 					walls.push(wallContainer);
