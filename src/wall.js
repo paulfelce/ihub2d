@@ -1,3 +1,5 @@
+//import { ids } from "webpack";
+
 export default class Wall
 {
 
@@ -13,9 +15,10 @@ export default class Wall
 		this.canvas = Canvas;
 	}
 
-/* user has placed the end of the wall. Put a wall in*/
-/* WallID is the identifier we tag the object with so we can find it under the mouse pointer (via object.tag) */
-	add(ruler) /* line length is how long the wall is */
+	/* user has placed the end of the wall. Put a wall in*/
+	/* pass the previous wall so we know if it's an opening or not */
+
+	add(ruler) 
 	{
 		
 		this.startX = ruler.x1;
@@ -24,7 +27,6 @@ export default class Wall
 		this.endY = ruler.y2;
 		this.lineLength = ruler.lineLength();
 		this.wallOrientation = ruler.orientation;
-		var wallID = 1;		
 		
 		var midPointX = this.startX;
 		var midPointY = this.startY;
@@ -95,37 +97,21 @@ export default class Wall
 			rectConnectX = this.startX;
 		}
 
-
 		//Add our wall and connector to the canvas
-		var fillColour = "#bdd7ee";
+		var fillColour = "#44d63c";
 
 		//fill same as border so can't see overlaps
-		var rectWall = new fabric.Rect({ stroke:'green',strokeWidth:1,fill:'green', selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });
-		rectWall.tag = "objRef=" + wallID;  //label all objects created, so we can delete them a group.
-		rectWall.tag2 = "objRef2=a";
+		var rectWall = new fabric.Rect({ stroke:fillColour,strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
 		this.canvas.add(rectWall);
 
 		/* the last wall doesn't need a snapTarget */
 		if(!ruler.completed)
 		{
-		var rectConnect = new fabric.Rect({ stroke:'red',strokeWidth:1,fill:'white', selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });
-		rectConnect.tag = "objRef=" + wallID;
-		rectConnect.tag2 = "objRef2=b";
+		var rectConnect = new fabric.Rect({ stroke:'red',strokeWidth:1,fill:'white', selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });		
 		this.canvas.add(rectConnect);
 		}
 		
-
-		var exteriorCircle;
-		if(this.wallOrientation=="horizontal"){
-			//alert('working on exterior circle');
-		}
-		else{
-			//alert('working on exterior circle');
-		}
-
-		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });		
-		textX.tag = "objRef=" + wallID;
-		textX.tag2 = "objRef2=d";
+		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
 		this.canvas.add(textX);
 
 		//Return an array of the objects so we can delete them if need be

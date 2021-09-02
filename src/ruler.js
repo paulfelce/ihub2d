@@ -11,6 +11,7 @@ export default class Ruler
     orientation;
     wallWidth=25;
     completed=false;
+    angleDegrees=0;
     constructor(Canvas)
     {
         this.canvas = Canvas;
@@ -36,6 +37,7 @@ export default class Ruler
     {
         this.orientation = (this.orientation =='h') ? 'v' : 'h';        
     }
+
     setStart(x,y)
     {
         this.x1 = x;
@@ -44,17 +46,30 @@ export default class Ruler
     }
 
 
-
-
     setEnd(pointer,snapTarget)
     {
-        if(this.completed)
-        {
+        /*Set orientation based on angle so we can add openings */
+        
 
+        snapTarget.set({fill:'red'});
+
+        let angleDegrees= Math.atan2(pointer.y-this.y1,pointer.x-this.x1) * 180/Math.PI ;
+        this.angleDegrees=angleDegrees;// just debugging. Show in debug text
+        
+        if (Math.abs(angleDegrees)<20 || Math.abs(angleDegrees)>150)
+        {
+            this.orientation='h';
         }
-        else{
-        this.drawRuler(pointer, snapTarget);
+        else
+        {
+            this.orientation = 'v';
         }
+        
+        if(!this.completed)
+        {
+            this.drawRuler(pointer, snapTarget);
+        }
+        
     }
 
     drawRuler(pointer, snapTarget) {
@@ -67,8 +82,7 @@ export default class Ruler
             y = this.y1;
             /* Set start of line depending if we are drawing right or left */
             if (x >= snapTarget.left) {
-                this.x1 = snapTarget.left;
-            }
+                this.x1 = snapTarget.left;            }
 
             else {
                 this.x1 = snapTarget.left + this.wallWidth;
@@ -143,11 +157,17 @@ export default class Ruler
         }
 
 
+
+
+
     /*return the length of the current line */
     lineLength()
     {				
+        //return this.angleDegrees;
+
         /*lines are vertical or horizontal so this is easy */
         //return Math.sqrt(Math.pow(x2*1-x1*1, 2)+Math.pow(y2*1-y1*1, 2));
+        
         if(this.x1!=this.x2)
         {
             return Math.abs(this.x2-this.x1).toFixed(1);
@@ -156,6 +176,8 @@ export default class Ruler
         {
             return Math.abs(this.y2-this.y1).toFixed(1);
         }
+        
+     
     }
     
 

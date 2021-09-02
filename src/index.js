@@ -1,3 +1,4 @@
+//https://www.npmjs.com/package/node-polyfill-webpack-plugin
 import Grid from './grid.js'
 import Ruler from './ruler.js'
 import Wall from './wall.js'
@@ -10,7 +11,7 @@ function appStart(){
 	DebugText = new fabric.Text('Debug Text ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(DebugText);		
 
-	var snapStart = new fabric.Rect({top:50,left:25,width:25,height:25,fill:"#000fff"});
+	var snapStart = new fabric.Rect({top:50,left:125,width:25,height:25,fill:"#000fff"});
 	canvas.add(snapStart);
 	snapTarget = snapStart;
 	
@@ -24,24 +25,18 @@ function appStart(){
 
 var rect;
 var DebugText , Debug2, DebugSnap,DebugOrientation;
-		var arr = new Array();		
-		var walls = new Array();
-		var wallCount = 0;
-		var graphtype; 
+		
+		var walls = new Array();		
         var text;
-		var pxLineLength;
+
 		
-		
-		var snapTarget;
-		var mouseOffColour; //store the colour of a connector so we can restore it when we mouse off
-		var mouseCircle;//visual clue of where the pointer is
-        var c = document.getElementById('canvas');
+		var snapTarget;		
+		var mouseCircle;//visual clue of where the pointer is        
         var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true});     
-        
-		fabric.Object.prototype.transparentCorners = false;      		
+        //fabric.Object.prototype.transparentCorners = false;      		
      	var ruler;
 		var ObjectOrientation='horizontal'; // track if we are moving horizontally or vertically and with an opening.
-						//(first cut assumes we have to go horizontal then vertical etc)
+								//(first cut assumes we have to go horizontal then vertical etc)
 		appStart();
 
 		function getObjectByTag(tag){
@@ -75,51 +70,58 @@ var DebugText , Debug2, DebugSnap,DebugOrientation;
 		canvas.on('mouse:up', function(o){
             
 			 var pointer = canvas.getPointer(o.e);
+
 			 
-			 /* right click to delete a wall */
-			 if(o.button ===3)
-			 {
-
-				
-				if(walls.length>1)
-				{
-					let wallContainer = walls[walls.length-1];
-					snapTarget = walls[walls.length-2].snapTarget;//update the snaptarget to the prev wall
-					ruler.flipOrientation();//because we delete one wall at a time (not a random one) we can get away with flipping.
-					ruler.setStart(snapTarget.left,snapTarget.top);
-					canvas.remove(wallContainer.wall);
-					canvas.remove(wallContainer.snapTarget);
-					canvas.remove(wallContainer.text);
-					walls.pop();
-				}
-					
-			}
-
 
 			 //We've clicked the second point so draw the rectangle
 			if(o.button ===1)
 			{
+				var pointer = canvas.getPointer(o.e);
 				if(!ruler.completed)
-				{
-                    
-					var pointer = canvas.getPointer(o.e);
-
-					if(ruler.loopComplete(pointer.x,pointer.y))
+				{	
+					let rulerLoopComplete;
+					rulerLoopComplete = ruler.loopComplete(pointer.x,pointer.y);
+					if(rulerLoopComplete)
 					{
 						ruler.completed = true;
 					}
 					var wall = new Wall(canvas);			
-					
+										
 					var wallContainer = wall.add(ruler)	;
-
 					snapTarget = wallContainer.snapTarget;
+					
 					walls.push(wallContainer);
-					wallCount++;
+					
 					ruler.flipOrientation();	
 					ruler.setStart(snapTarget.left,snapTarget.top);
-
 				}
+				
+			
+			 /* right click to delete a wall */
+			 if(o.button ===3)
+			 {
+				if(ruler.loopComplete(pointer.x,pointer.y))
+				{
+					
+					ruler.setStart(pointer.x,pointer.y)
+				}
+				else
+				{
+				if(walls.length>1)
+					{
+						let wallContainer = walls[walls.length-1];
+						snapTarget = walls[walls.length-2].snapTarget;//update the snaptarget to the prev wall
+						ruler.flipOrientation();//because we delete one wall at a time (not a random one) we can get away with flipping.
+						ruler.setStart(snapTarget.left,snapTarget.top);
+						canvas.remove(wallContainer.wall);
+						canvas.remove(wallContainer.snapTarget);
+						canvas.remove(wallContainer.text);
+						walls.pop();
+					}
+				}
+					
 			}
+}
 			
 			
 		});
