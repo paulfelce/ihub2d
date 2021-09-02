@@ -125,14 +125,16 @@ var DebugText
 			
 		});
 		
-		//canvas.on('mouse:over', function(e) {				
-		canvas.on('mouse:over', function(e) {
-			return;	 // new version always snaps
-			if(e.target!==null)			
-			{
-				snapTarget = e.target; //set this  so we can delete.
-			}
-		});
+		canvas.on('mouse:wheel', function(opt) {
+			var delta = opt.e.deltaY;
+			var zoom = canvas.getZoom();
+			zoom *= 0.999 ** delta;
+			if (zoom > 20) zoom = 20;
+			if (zoom < 0.01) zoom = 0.01;
+			canvas.setZoom(zoom);
+			opt.e.preventDefault();
+			opt.e.stopPropagation();
+		  })
 		
 
 				
@@ -140,13 +142,6 @@ var DebugText
 		//	http://fabricjs.com/fabric-intro-part-3  -- groups
 
 
-/* move the edge of the exterior of the object */
-function changeExterior(obj){
-	if(obj.wallOrientation=="horizontal"){
 
-
-
-	}
-}
 
 		//https://stackoverflow.com/questions/35141349/resizing-width-height-properties-of-fabricjs-rects
