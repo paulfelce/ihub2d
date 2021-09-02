@@ -23,8 +23,7 @@ function appStart(){
 	
 }
 
-var rect;
-var DebugText , Debug2, DebugSnap,DebugOrientation;
+var DebugText 
 		
 		var walls = new Array();		
         var text;
