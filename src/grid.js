@@ -5,9 +5,9 @@ export default class Grid
     {
 	
         var points;//#d4d4d4
-        for(var i =0;i<=1100;i=i+25)
+        for(var i =0;i<=12000;i=i+100)
         {
-            points = [0,i,1100,i];
+            points = [0,i,12000,i];
 
             gridLine = new fabric.Line(points,{
             strokeWidth: .3,					
@@ -22,9 +22,9 @@ export default class Grid
             
         }
 
-        for(var i =0;i<=1100;i=i+25)
+        for(var i =0;i<=12000;i=i+100)
         {
-            var points = [i,0,i,1100];
+            var points = [i,0,i,12000];
             var gridLine = new fabric.Line(points,{
             strokeWidth: .3,			
             stroke: 'blue',
