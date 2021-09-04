@@ -27,8 +27,6 @@ export default class Ruler
 
         this.canvas.add(this.line);
         
-
-
         this.label = new fabric.Text('Length ' + this.lineLength(), { left: this.x2, top: this.y2, fontSize: 12,selectable:false });					        
         this.canvas.add(this.label);	
 
@@ -78,10 +76,11 @@ export default class Ruler
         var y = pointer.y;
 
 
-
-        if (this.orientation == "h") {
-            y = this.y1;
-            /* Set start of line depending if we are drawing right or left */
+        if (this.orientation == "h") 
+        {
+            y = snapTarget.top;
+            this.y1 = y; //reset the position to the snap target
+            // Set start of line depending if we are drawing right or left
             if (x >= snapTarget.left) {
                 this.x1 = snapTarget.left;            }
 
@@ -95,7 +94,9 @@ export default class Ruler
         }
 
         else {
-            x = this.x1;
+            x = snapTarget.left ;
+            this.x1 = x; // if we'moved across, then down, the line start may have been moved to the far edge so reset it.
+            
             if (y >= snapTarget.top) {
                 this.y1 = snapTarget.top;
             }
@@ -112,7 +113,7 @@ export default class Ruler
 
         //The co-ords for the ruler are top left for a wall going left to right
         //but we want to visualuse the line through the middle of the wall. Rulerx and y are the corods for the line, not the wall
-        var rulerx1;
+        var rulerx1; 
         var rulerx2;
         var rulery1;
         var rulery2;
@@ -136,7 +137,7 @@ export default class Ruler
         }
         this.line.set({ x1: rulerx1, y1: rulery1, x2: rulerx2, y2: rulery2,stroke:lineColour });
         this.label.set({ text: 'Length ' + this.lineLength(), left: this.x2, top: this.y2 });
-    }
+    }/* end draw ruler */
 
         /* Check to see if the loop has been completed*/
         loopComplete(x,y)
