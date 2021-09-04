@@ -76,44 +76,6 @@ export default class Ruler
         
     }
 
-    /* prompt user for exact line length based on current ruler length */
-    setExactEnd(snapTarget)
-    {
-        
-        
-        let pointer = this.canvas.getPointer();
-        this.setOrientation(pointer);
-        let orientation = this.orientation;//don't allow it to change when mouse moves to input box
-        
-        let exactSize = window.prompt("Enter size in mm");
-        
-        var rulerPointer = new RulerPointer(pointer.x,pointer.y);
-        
-        if(orientation=='h')
-        {
-            if(this.x2 > this.x1)
-            {
-                rulerPointer.x = this.x1 +  parseInt(exactSize);
-            }
-            else
-            {
-                rulerPointer.x = this.x1 - parseInt(exactSize);
-            }
-        }
-        else
-        {
-            if(this.y2 > this.y1)
-            {
-                rulerPointer.y = this.y1 +  parseInt(exactSize);
-            }
-            else
-            {
-                rulerPointer.y = this.y1 - parseInt(exactSize);
-            }
-        }
-
-        this.setEnd(rulerPointer,snapTarget);
-    }
 
     drawRuler(pointer, snapTarget) {
         var x = pointer.x;
