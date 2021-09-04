@@ -8,19 +8,23 @@ function appStart(){
 	
 	var grid = new Grid(canvas);
 	
-	DebugText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
-	canvas.add(DebugText);		
+	zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
+	canvas.add(zoomText);	
+	
+	devText = new fabric.Text('exterior:top', { left: 100, top: 0, fontSize: 12 });					
+	canvas.add(devText);	
 
 	snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
 	canvas.add(snapTarget);
 	snapTarget = snapTarget;
-	
+
 	ruler = new Ruler(canvas,snapTarget);
 
 	
 }
 
-var DebugText 
+	var zoomText 
+	var devText
 	var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true}); 	
 	var wallCollection = new WallCollection(canvas);
     var text;		
@@ -86,7 +90,7 @@ var DebugText
 			if (zoom < 0.01) zoom = 0.01;
 			canvas.setZoom(zoom);
 			var fs = 1/zoom *14;
-			DebugText.set({text:"Zoom " + zoom.toFixed(2) , fontSize:fs});
+			zoomText.set({text:"Zoom " + zoom.toFixed(2) , fontSize:fs});
 			opt.e.preventDefault();
 			opt.e.stopPropagation();
 		  })

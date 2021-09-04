@@ -27,7 +27,7 @@ export default class Wall
 		this.startY = ruler.y1;
 		this.endX = ruler.x2;
 		this.endY = ruler.y2;
-		this.lineLength = ruler.lineLength();
+		this.lineLength = ruler.lineLength(snapTarget);
 		this.wallOrientation = ruler.orientation;
 		
 		var midPointX = this.startX;
@@ -134,10 +134,13 @@ export default class Wall
 
 		
 		/* draw four walls instead of a rectangle so we can hide overlaps */
-		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],wallStyle);
-		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);		
-		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],wallStyle);			
-		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);
+		var exteriorWall;
+		exteriorWall='top';
+
+		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],wallStyle,exteriorWall=='top');
+		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle,exteriorWall=='bottom');		
+		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],wallStyle,exteriorWall=='left');			
+		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle,exteriorWall=='right');
 
 
 		/* the last wall doesn't need a snapTarget */
@@ -161,13 +164,13 @@ export default class Wall
 	}
 
 	/*Draw all sides of the wall in the same style */
-	drawWallLine(points,wallStyle)
+	drawWallLine(points,wallStyle,exteriorWall)
 	{
 
 		var strokeColour = (wallStyle=='wall') ? 'black' : 'blue';
-
+		var strokeWidth = exteriorWall ? 3:1;
 		var wallLine= new fabric.Line(points, {
-			strokeWidth: 1,			
+			strokeWidth: strokeWidth,			
 			stroke: strokeColour,
 			originX: 'center',
 			originY: 'center'	});
@@ -189,7 +192,7 @@ class WallContainer
 	text;
 	orientation;
 	wallStyle; /*Wall or opening*/
-
+	exteriorSide;
 	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle)
 	{
 		this.topSide=topSide;
@@ -200,6 +203,17 @@ class WallContainer
 		this.text = Text;
 		this.orientation = wallOrientation;
 		this.wallStyle = wallStyle;
+	}
+
+	get exteriorSide()
+	{
+		return this.exteriorSide;
+
+	}
+
+	set exteriorSide(value)
+	{
+		this.exteriorSide=value;
 	}
 
 }

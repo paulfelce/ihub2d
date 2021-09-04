@@ -46,7 +46,7 @@ export default class Ruler
 
         
         
-        this.label = new fabric.Text('Length ' + this.lineLength(), { left: this.x2, top: this.y2, fontSize: 12,selectable:false });					        
+        this.label = new fabric.Text('Length ' + this.lineLength(snapStart), { left: this.x2, top: this.y2, fontSize: 12,selectable:false });					        
         this.canvas.add(this.label);	
 
     }
@@ -171,7 +171,7 @@ export default class Ruler
             lineColour = 'green';
         }
         this.line.set({ x1: rulerx1, y1: rulery1, x2: rulerx2, y2: rulery2,stroke:lineColour });
-        this.label.set({ text: 'Length ' + this.lineLength(), left: this.x2, top: this.y2 });
+        this.label.set({ text: 'Length ' + this.lineLength(snapTarget), left: this.x2, top: this.y2 });
     }/* end draw ruler */
 
         /* Check to see if the loop has been completed*/
@@ -193,25 +193,67 @@ export default class Ruler
             return result;
         }
 
-
-
-
+    
+    
 
     /*return the length of the current line */
-    lineLength()
+    lineLength(snapTarget)
     {				
         //return this.angleDegrees;
 
         /*lines are vertical or horizontal so this is easy */
         //return Math.sqrt(Math.pow(x2*1-x1*1, 2)+Math.pow(y2*1-y1*1, 2));
         
+        var rulerStart=new RulerPointer(this.x1,this.y1);
+
+        //Figure out where the line should start
+        //This will vary where we are relative to the snap Target
+        // (x2 and y2 are the pointer location)
+
+        //Horizontal lines
+        if(this.orientation=='h')
+        {
+            //Left of snapTarget
+            if(this.x2<snapTarget.left)
+            {
+                rulerStart.x = snapTarget.left;   
+            }
+            //Right of snapTarget
+            if(this.x2>snapTarget.left)
+            {
+                rulerStart.x = snapTarget.left+snapTarget.width;   
+            }
+        }
+        //Vertical Lines
+        if(this.orientation=='v')
+        {
+            //Up from snap
+            if(this.y2<snapTarget.top)
+            {
+                rulerStart.y = snapTarget.top;
+            }
+        
+            //down from snap
+            if(this.y>snapTarget.top)
+            {
+                rulerStart.y = snapTarget.top+snapTarget.width;
+            }
+        }
+
+        //special case on the first wall
+        if(snapTarget.left == 50 && snapTarget.top == 50)
+        {
+            rulerStart.x = snapTarget.left;
+        }
+
+
         if(this.x1!=this.x2)
         {
-            return Math.abs(this.x2-this.x1).toFixed(1);
+            return Math.abs(this.x2-rulerStart.x).toFixed(1);
         }
         else
         {
-            return Math.abs(this.y2-this.y1).toFixed(1);
+            return Math.abs(this.y2-rulerStart.y).toFixed(1);
         }
         
      
