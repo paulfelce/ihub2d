@@ -6,6 +6,7 @@ export default class Ruler
     x2=150;
     y2=50;
     line;
+    lineGuide;
     label;
     canvas;
     orientation;
@@ -28,8 +29,22 @@ export default class Ruler
             originX: 'center',
             originY: 'center'					
         });
-
         this.canvas.add(this.line);
+
+        //add a guide as an indicator of where the wall may line up
+        //We know the ruler is initially horizontal so the guide is vertical
+        points = [this.x2,0,this.x2,1200];
+        this.lineGuide= new fabric.Line(points, {
+            strokeWidth: .3,			
+            stroke: 'blue',
+            originX: 'center',
+            originY: 'center',			
+            strokeDashArray: [5, 5]
+        });
+
+        this.canvas.add(this.lineGuide);
+
+        
         
         this.label = new fabric.Text('Length ' + this.lineLength(), { left: this.x2, top: this.y2, fontSize: 12,selectable:false });					        
         this.canvas.add(this.label);	
@@ -70,8 +85,26 @@ export default class Ruler
         if(!this.completed)
         {
             this.drawRuler(pointer, snapTarget);
+            
+            //redraw the guide-line
+            if(this.orientation=='h')
+            {
+                this.lineGuide.set({x1:pointer.x,x2:pointer.x,y1:0,y2:1200});
+            }
+            else
+            {
+                this.lineGuide.set({y1:pointer.y,y2:pointer.y,x1:0,x2:1200});
+            }
+
         }
         
+    }
+
+    //draw a line showing where pointer would line up
+    drawGuide(pointer)
+    {
+
+
     }
 
 
