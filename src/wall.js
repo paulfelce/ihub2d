@@ -101,6 +101,7 @@ export default class Wall
 
 		//Add our wall and connector to the canvas
 		var fillColour = "#44d63c";
+		fillColour = '#ffffff';//white looks better
 
 		if(!(prevWall===undefined))
 		{
@@ -114,13 +115,14 @@ export default class Wall
 			else
 			{
 				fillColour = '#44d63c';
+				fillColour = '#ffffff';
 			}
 		}
 
 
 
 		//fill same as border so can't see overlaps
-		var rectWall = new fabric.Rect({ stroke:fillColour,strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
+		var rectWall = new fabric.Rect({ stroke:'000000',strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
 		this.canvas.add(rectWall);
 
 		/* the last wall doesn't need a snapTarget */
