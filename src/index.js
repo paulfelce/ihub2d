@@ -2,6 +2,7 @@
 import Grid from './grid.js'
 import Ruler from './ruler.js'
 import Wall from './wall.js'
+import WallCollection from './wallcollection.js'
 const fabric = require("fabric").fabric;
 
 function appStart(){
@@ -21,18 +22,13 @@ function appStart(){
 }
 
 var DebugText 
+	var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true}); 	
+	var wallCollection = new WallCollection(canvas);
+    var text;		
+	var snapTarget;		         
+    var ruler;
 		
-		var walls = new Array();		
-        var text;
-
-		
-		var snapTarget;		
-		
-        var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true});     
-        
-     	var ruler;
-		
-		appStart();
+	appStart();
 
 
 
@@ -69,15 +65,10 @@ var DebugText
 					{
 						ruler.completed = true;
 					}
-					var wall = new Wall(canvas);			
-										
-					var wallContainer = wall.add(ruler,walls[walls.length-1],snapTarget);
-					snapTarget = wallContainer.snapTarget;
 					
-					walls.push(wallContainer);
+					snapTarget = wallCollection.add(ruler,snapTarget);	
+					ruler.setStart(snapTarget.left,snapTarget.top); // set the ruler to start on the NEW snaptarget					
 					
-					//ruler.flipOrientation();	
-					ruler.setStart(snapTarget.left,snapTarget.top);
 				}
 				
 			}
@@ -91,30 +82,10 @@ var DebugText
 				}
 				else
 				{
-				if(walls.length>1)
-					{
-						let wallContainer = walls[walls.length-1];
-						snapTarget = walls[walls.length-2].snapTarget;//update the snaptarget to the prev wall						
-						ruler.setStart(snapTarget.left,snapTarget.top);
-
-						var wall = new Wall(canvas);
-						wall.delete(wallContainer);
-/*
-						canvas.remove(wallContainer.leftSide);
-						canvas.remove(wallContainer.rightSide);
-						canvas.remove(wallContainer.bottomSide);
-						canvas.remove(wallContainer.topSide);
-						canvas.remove(wallContainer.wall);
-						canvas.remove(wallContainer.snapTarget);
-						canvas.remove(wallContainer.text);
-						*/
-						walls.pop();
-					}
-            }
-					
-			
-}
-			
+					snapTarget = wallCollection.delete();
+					ruler.setStart(snapTarget.left,snapTarget.top);
+				}
+	        }				
 			
 		});
 		
