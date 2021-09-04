@@ -143,7 +143,7 @@ export default class Wall
 		/* the last wall doesn't need a snapTarget */
 		if(!ruler.completed)
 		{/*rgba fill for 'none' */
-		var rectConnect = new fabric.Rect({ stroke:'green',fill:'rgba(0,0,0,0)',strokeWidth:1, selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });		
+		var rectConnect = new fabric.Rect({ stroke:'rgba(0,0,0,0)',fill:'rgba(0,0,0,0)',strokeWidth:1, selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });		
 		this.canvas.add(rectConnect);
 		}
 		
@@ -174,18 +174,7 @@ export default class Wall
 		this.canvas.add(wallLine);
 
 		return wallLine;
-	}
-	//delete all objects in the specified wall Container
-	delete(wallContainer)
-	{
-		this.canvas.remove(wallContainer.leftSide);
-		this.canvas.remove(wallContainer.rightSide);
-		this.canvas.remove(wallContainer.bottomSide);
-		this.canvas.remove(wallContainer.topSide);
-		this.canvas.remove(wallContainer.wall);
-		this.canvas.remove(wallContainer.snapTarget);
-		this.canvas.remove(wallContainer.text);
-	}
+	}	
 
 }
 
