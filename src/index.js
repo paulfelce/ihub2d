@@ -11,13 +11,10 @@ function appStart(){
 	DebugText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(DebugText);		
 
-	var snapStart = new fabric.Rect({top:50,left:25,width:25,height:25,fill:"#000fff"});
+	var snapStart = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)"});
 	canvas.add(snapStart);
 	snapTarget = snapStart;
 	
-	mouseCircle = new fabric.Circle({left:0,top:0,radius:2,stroke:'red'})
-	canvas.add(mouseCircle);
-
 	ruler = new Ruler(canvas);
 
 	
@@ -30,7 +27,7 @@ var DebugText
 
 		
 		var snapTarget;		
-		var mouseCircle;//visual clue of where the pointer is        
+		
         var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true});     
         
      	var ruler;
@@ -42,8 +39,7 @@ var DebugText
 		canvas.on('mouse:move', function(o){
             canvas.remove(text);
 			var pointer = canvas.getPointer(o.e);
-			mouseCircle.set({left:pointer.x,top:pointer.y});
-
+			
  
 			if(!ruler.completed)
 			{
