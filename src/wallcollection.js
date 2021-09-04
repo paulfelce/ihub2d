@@ -20,25 +20,45 @@ export default class WallCollection
 
 		if (this.walls.length>0 ) // don't check for the first wall 
 		{
+			let sharedCorner = this.sharedCorner(wallContainer,prevWall);
+
 			if (wallContainer.wallStyle = 'wall') // allow overlaps for openings
 			{
-				this.removeOverlaps(wallContainer,prevWall,snapTarget.width);
-			}
-			/* try just using a border :)
+				this.removeOverlaps(wallContainer,prevWall,snapTarget.width,sharedCorner);
+			}			
 			//Set the exterior wall.  Using the logic that the topSide is alway exterior for our first wall, and the exterior must follow this 
-			if(prevWall.orientation == wallContainer.orientation)
+			let exteriorWall = wallContainer.topSide;
+			if (wallContainer.orientation == 'v' && sharedCorner == 'topleft')
 			{
-				wallContainer.exteriorSide = prevWall.orientation; //if it's an opening (or wall after opening) the exterior will stay the same
-			}
-			else
+				exteriorWall = wallContainer.rightSide;
+			}			
+			if (wallContainer.orientation == 'v' && sharedCorner == 'topright')
 			{
-				//new wall shares top right corner
-				if(wall.orientation == 'v' &&   prevWall.topside.y1 == wallContainer.topSide.y1 && prevWall.rightSide.x1 == wallContainer.rightSide.x1)
-				{
-					wallContainer.exteriorSide =12
-				}
+				exteriorWall = wallContainer.rightSide;
 			}
-			*/
+			if (wallContainer.orientation == 'v' && sharedCorner == 'bottomleft')
+			{
+				exteriorWall = wallContainer.leftSide;
+			}
+			if (wallContainer.orientation == 'v' && sharedCorner == 'bottomright')
+			{
+				exteriorWall = wallContainer.leftSide;
+			}
+
+			if (wallContainer.orientation == 'h' && sharedCorner == 'topright')
+			{
+				exteriorWall = wallContainer.bottomSide;
+			}
+
+			if (wallContainer.orientation == 'h' && sharedCorner == 'bottomright')
+			{
+				exteriorWall = wallContainer.bottomSide;
+			}
+
+
+
+			wallContainer.exteriorSide = exteriorWall;
+			wallContainer.refreshExteriorSide();
 
 	 	}
 		 else{
@@ -53,6 +73,9 @@ export default class WallCollection
 
 		return wallContainer.snapTarget;
 	 }
+	 
+
+
 
 	 //determine which corner of the snapTarget is shared by the new wall
 	 //we need this so we can eliminate overlaps and to determine the exterior wall.
@@ -107,41 +130,42 @@ export default class WallCollection
 				}
 				else //share at bottom right
 				{
-					result = 'topright';
+					result = 'bottomright';
 				}
 				
 			}
 			
 		}
+		
 		return result;
 	 }
 
-	 removeOverlaps(wallContainer,prevWall,wallWidth)
+	 removeOverlaps(wallContainer,prevWall,wallWidth,sharedCorner)
 	 {
 		//adjust the wall so there's no overlap		
 		//1st cut assumes it's not an opening
-		var sc = this.sharedCorner(wallContainer,prevWall);
+		
 
 		if(wallContainer.orientation=='v')
 		{
-			if(sc=='topleft')
+			if(sharedCorner=='topleft')
 			{
 					wallContainer.rightSide.set({y1:wallContainer.rightSide.y1+wallWidth});
 					prevWall.bottomSide.set({x1:prevWall.bottomSide.x1 + wallWidth});
 			}
-			if(sc=='topright')
+			if(sharedCorner=='topright')
 			{
 				wallContainer.leftSide.set({y1:wallContainer.leftSide.y1+wallWidth});
 				prevWall.bottomSide.set({x2:prevWall.bottomSide.x2-wallWidth});
 			}
 			
 			
-			if(sc=='bottomleft')
+			if(sharedCorner=='bottomleft')
 			{
 				wallContainer.rightSide.set({y2:wallContainer.rightSide.y2-wallWidth});					
 				prevWall.topSide.set({x1:prevWall.topSide.x1+wallWidth});
 			}
-			if(sc=='bottomright')
+			if(sharedCorner=='bottomright')
 			{
 				wallContainer.leftSide.set({y2:wallContainer.leftSide.y2-wallWidth});					
 				prevWall.topSide.set({x2:prevWall.topSide.x2-wallWidth});
@@ -152,23 +176,23 @@ export default class WallCollection
 		if(wallContainer.orientation=='h') // horizontal wall
 		{
 			
-			if(sc=='topleft')
+			if(sharedCorner=='topleft')
 			{
 				wallContainer.bottomSide.set({x1:wallContainer.leftSide.x1+wallWidth});
 				prevWall.rightSide.set({y1:prevWall.rightSide.y1+wallWidth});				
 			}
-			if(sc=='bottomleft')
+			if(sharedCorner=='bottomleft')
 				{
 					wallContainer.topSide.set({x1:wallContainer.leftSide.x1+wallWidth});
 					prevWall.rightSide.set({y2:prevWall.rightSide.y2-wallWidth});
 				}
 			
-			if(sc=='topright')
+			if(sharedCorner=='topright')
 				{
 					wallContainer.bottomSide.set({x2:wallContainer.rightSide.x2-wallWidth});					
 					prevWall.leftSide.set({y1:prevWall.leftSide.y1+wallWidth});
 				}
-			if(sc=='bottomright')
+			if(sharedCorner=='bottomright')
 				{
 					wallContainer.topSide.set({x2:wallContainer.topSide.x2-wallWidth});		
 					prevWall.leftSide.set({y2:prevWall.leftSide.y2-wallWidth});

@@ -10,6 +10,7 @@ export default class Wall
 	 endY=0;	 
 	 canvas;
 	 wallWidth=25;
+	 exteriorWall;
 	 constructor(Canvas)	 
 	{
 		this.canvas = Canvas;
@@ -133,14 +134,12 @@ export default class Wall
 		}
 
 		
-		/* draw four walls instead of a rectangle so we can hide overlaps */
-		var exteriorWall;
-		exteriorWall='top';
+		/* draw four walls instead of a rectangle so we can hide overlaps */		
 
-		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],wallStyle,exteriorWall=='top');
-		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle,exteriorWall=='bottom');		
-		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],wallStyle,exteriorWall=='left');			
-		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle,exteriorWall=='right');
+		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],wallStyle);
+		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);		
+		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],wallStyle);			
+		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);
 
 
 		/* the last wall doesn't need a snapTarget */
@@ -164,13 +163,12 @@ export default class Wall
 	}
 
 	/*Draw all sides of the wall in the same style */
-	drawWallLine(points,wallStyle,exteriorWall)
+	drawWallLine(points,wallStyle)
 	{
 
-		var strokeColour = (wallStyle=='wall') ? 'black' : 'blue';
-		var strokeWidth = exteriorWall ? 3:1;
+		var strokeColour = (wallStyle=='wall') ? 'black' : 'blue';		
 		var wallLine= new fabric.Line(points, {
-			strokeWidth: strokeWidth,			
+			strokeWidth: 1,			
 			stroke: strokeColour,
 			originX: 'center',
 			originY: 'center'	});
@@ -178,6 +176,7 @@ export default class Wall
 
 		return wallLine;
 	}	
+
 
 }
 
@@ -202,19 +201,16 @@ class WallContainer
 		this.snapTarget=Snap;
 		this.text = Text;
 		this.orientation = wallOrientation;
-		this.wallStyle = wallStyle;
+		this.wallStyle = wallStyle;		
 	}
 
-	get exteriorSide()
+	refreshExteriorSide()
 	{
-		return this.exteriorSide;
+		this.exteriorSide.set({strokeWidth:3});
 
 	}
 
-	set exteriorSide(value)
-	{
-		this.exteriorSide=value;
-	}
+
 
 }
 
