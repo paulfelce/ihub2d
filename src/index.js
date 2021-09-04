@@ -94,9 +94,12 @@ var DebugText
 				if(walls.length>1)
 					{
 						let wallContainer = walls[walls.length-1];
-						snapTarget = walls[walls.length-2].snapTarget;//update the snaptarget to the prev wall
-						ruler.flipOrientation();//because we delete one wall at a time (not a random one) we can get away with flipping.
+						snapTarget = walls[walls.length-2].snapTarget;//update the snaptarget to the prev wall						
 						ruler.setStart(snapTarget.left,snapTarget.top);
+
+						var wall = new Wall(canvas);
+						wall.delete(wallContainer);
+/*
 						canvas.remove(wallContainer.leftSide);
 						canvas.remove(wallContainer.rightSide);
 						canvas.remove(wallContainer.bottomSide);
@@ -104,6 +107,7 @@ var DebugText
 						canvas.remove(wallContainer.wall);
 						canvas.remove(wallContainer.snapTarget);
 						canvas.remove(wallContainer.text);
+						*/
 						walls.pop();
 					}
             }

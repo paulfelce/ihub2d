@@ -175,6 +175,18 @@ export default class Wall
 
 		return wallLine;
 	}
+	//delete all objects in the specified wall Container
+	delete(wallContainer)
+	{
+		this.canvas.remove(wallContainer.leftSide);
+		this.canvas.remove(wallContainer.rightSide);
+		this.canvas.remove(wallContainer.bottomSide);
+		this.canvas.remove(wallContainer.topSide);
+		this.canvas.remove(wallContainer.wall);
+		this.canvas.remove(wallContainer.snapTarget);
+		this.canvas.remove(wallContainer.text);
+	}
+
 }
 
 /*items that make up a wall so we can delete as one */
