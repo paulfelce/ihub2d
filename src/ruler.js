@@ -33,10 +33,6 @@ export default class Ruler
         this.canvas.add(this.label);	
 
     }
-    flipOrientation()    
-    {
-        this.orientation = (this.orientation =='h') ? 'v' : 'h';        
-    }
 
     setStart(x,y)
     {

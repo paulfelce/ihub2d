@@ -76,7 +76,7 @@ var DebugText
 					
 					walls.push(wallContainer);
 					
-					ruler.flipOrientation();	
+					//ruler.flipOrientation();	
 					ruler.setStart(snapTarget.left,snapTarget.top);
 				}
 				
