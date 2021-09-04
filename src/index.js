@@ -32,22 +32,11 @@ var DebugText
 		var snapTarget;		
 		var mouseCircle;//visual clue of where the pointer is        
         var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true});     
-        //fabric.Object.prototype.transparentCorners = false;      		
+        
      	var ruler;
-		var ObjectOrientation='horizontal'; // track if we are moving horizontally or vertically and with an opening.
-								//(first cut assumes we have to go horizontal then vertical etc)
+		
 		appStart();
 
-		function getObjectByTag(tag){
-			canvas.getObjects().forEach(function (targ) {
-				if(targ.hasOwnProperty('tag')){
-					if(targ.tag ==tag)
-					{
-						return targ;
-					}
-				}
-			})
-		}
 
 
 		canvas.on('mouse:move', function(o){

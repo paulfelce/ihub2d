@@ -126,10 +126,8 @@ export default class Wall
 						strokeWidth: 18,			
 						stroke: 'blue',
 						originX: 'center',
-						originY: 'center'	});
-	
-//					fillColour='#ff0000';
-//					this.canvas.add(hideLine);
+						originY: 'center'	});	
+
 				}
 			}
 		}
@@ -144,8 +142,8 @@ export default class Wall
 
 		/* the last wall doesn't need a snapTarget */
 		if(!ruler.completed)
-		{
-		var rectConnect = new fabric.Rect({ stroke:'red',strokeWidth:1,fill:'white', selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });		
+		{/*rgba fill for 'none' */
+		var rectConnect = new fabric.Rect({ stroke:'green',fill:'rgba(0,0,0,0)',strokeWidth:1, selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });		
 		this.canvas.add(rectConnect);
 		}
 		

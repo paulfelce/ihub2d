@@ -67,9 +67,6 @@ export default class Ruler
     {
         /*Set orientation based on angle so we can add openings */
         
-
-        snapTarget.set({fill:'red'});
-
         this.setOrientation(pointer);
         
         if(!this.completed)
