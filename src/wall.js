@@ -100,23 +100,13 @@ export default class Wall
 		}
 
 		//Add our wall and connector to the canvas
-		var fillColour = "#44d63c";
-		fillColour = '#ffffff';//white looks better
+		var wallStyle = "wall";		
 
 		if(!(prevWall===undefined))
 		{
 			// when a wall continues in the same direction we need to flip between wall and opening
 			if(prevWall.orientation == this.wallOrientation)
-
-			if (prevWall.wall.fill == fillColour)
-			{
-				fillColour = '#7aa7f0';
-			}
-			else
-			{
-				fillColour = '#44d63c';
-				fillColour = '#ffffff';
-			}
+			wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
 		}
 
 
@@ -144,15 +134,12 @@ export default class Wall
 			}
 		}
 
-		//Main wall /* Originally a rectangle, but self build so we can amend to hide overlap	
-		var rectWall = new fabric.Rect({ stroke:'000000',strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
-		//this.canvas.add(rectWall);
-
+		
 		/* draw four walls instead of a rectangle so we can hide overlaps */
-		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY]);
-		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight]);		
-		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight]);			
-		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight]);
+		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],wallStyle);
+		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);		
+		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],wallStyle);			
+		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);
 
 
 		/* the last wall doesn't need a snapTarget */
@@ -168,7 +155,7 @@ export default class Wall
 
 
 		//Return an array of the objects so we can delete them if need be
-		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation);
+		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,wallStyle);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;
@@ -176,11 +163,14 @@ export default class Wall
 	}
 
 	/*Draw all sides of the wall in the same style */
-	drawWallLine(points)
+	drawWallLine(points,wallStyle)
 	{
+
+		var strokeColour = (wallStyle=='wall') ? 'black' : 'blue';
+
 		var wallLine= new fabric.Line(points, {
 			strokeWidth: 1,			
-			stroke: 'black',
+			stroke: strokeColour,
 			originX: 'center',
 			originY: 'center'	});
 		this.canvas.add(wallLine);
@@ -199,8 +189,9 @@ class WallContainer
 	snapTarget;
 	text;
 	orientation;
+	wallStyle; /*Wall or opening*/
 
-	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation)
+	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle)
 	{
 		this.topSide=topSide;
 		this.bottomSide=bottomSide;
@@ -209,6 +200,7 @@ class WallContainer
 		this.snapTarget=Snap;
 		this.text = Text;
 		this.orientation = wallOrientation;
+		this.wallStyle = wallStyle;
 	}
 
 }
