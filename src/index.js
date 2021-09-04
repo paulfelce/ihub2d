@@ -112,6 +112,10 @@ var DebugText
 						snapTarget = walls[walls.length-2].snapTarget;//update the snaptarget to the prev wall
 						ruler.flipOrientation();//because we delete one wall at a time (not a random one) we can get away with flipping.
 						ruler.setStart(snapTarget.left,snapTarget.top);
+						canvas.remove(wallContainer.leftSide);
+						canvas.remove(wallContainer.rightSide);
+						canvas.remove(wallContainer.bottomSide);
+						canvas.remove(wallContainer.topSide);
 						canvas.remove(wallContainer.wall);
 						canvas.remove(wallContainer.snapTarget);
 						canvas.remove(wallContainer.text);

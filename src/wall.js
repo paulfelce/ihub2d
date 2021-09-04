@@ -124,7 +124,7 @@ export default class Wall
 		/*Vertical wall */
 		if(this.wallOrientation=='v')
 		{
-			if(prevWall.wall.left < rectWallX ) 
+			if(prevWall.leftSide.x1 < rectWallX ) 
 			{
 				if(this.endY>this.startY) /* need to cover at top left */
 				{
@@ -148,21 +148,11 @@ export default class Wall
 		var rectWall = new fabric.Rect({ stroke:'000000',strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
 		//this.canvas.add(rectWall);
 
-		/*top side*/
-		var points = [rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY];
-		this.drawWallLine(points);
-
-		/*bottom side*/
-		points = [rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight];
-		this.drawWallLine(points);
-
-		/*left side*/
-		points = [rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight];
-		this.drawWallLine(points);
-
-		/*right side*/
-		points = [rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight];
-		this.drawWallLine(points);
+		/* draw four walls instead of a rectangle so we can hide overlaps */
+		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY]);
+		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight]);		
+		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight]);			
+		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight]);
 
 
 		/* the last wall doesn't need a snapTarget */
@@ -178,7 +168,7 @@ export default class Wall
 
 
 		//Return an array of the objects so we can delete them if need be
-		var wallContainer = new WallContainer(rectWall,rectConnect,textX,this.wallOrientation);
+		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;
@@ -194,20 +184,28 @@ export default class Wall
 			originX: 'center',
 			originY: 'center'	});
 		this.canvas.add(wallLine);
+
+		return wallLine;
 	}
 }
 
 /*items that make up a wall so we can delete as one */
 class WallContainer
 {
-	wall;
+	topSide;
+	bottomSide;
+	leftSide;
+	rightSide;
 	snapTarget;
 	text;
 	orientation;
 
-	constructor(Wall,Snap,Text,wallOrientation)
+	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation)
 	{
-		this.wall=Wall;
+		this.topSide=topSide;
+		this.bottomSide=bottomSide;
+		this.leftSide=leftSide;
+		this.rightSide=rightSide;
 		this.snapTarget=Snap;
 		this.text = Text;
 		this.orientation = wallOrientation;
