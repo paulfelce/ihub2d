@@ -7,7 +7,7 @@ const fabric = require("fabric").fabric;
 function appStart(){
 	
 	var grid = new Grid(canvas);
-	
+
 	zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(zoomText);	
 	
@@ -16,7 +16,6 @@ function appStart(){
 
 	snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
 	canvas.add(snapTarget);
-	snapTarget = snapTarget;
 
 	ruler = new Ruler(canvas,snapTarget);
 

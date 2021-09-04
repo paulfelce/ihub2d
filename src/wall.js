@@ -11,6 +11,7 @@ export default class Wall
 	 canvas;
 	 wallWidth=25;
 	 exteriorWall;
+	 
 	 constructor(Canvas)	 
 	{
 		this.canvas = Canvas;
@@ -19,17 +20,15 @@ export default class Wall
 	/* user has placed the end of the wall. Put a wall in*/
 	/* pass the previous wall so we know if it's an opening or not */
 
-	add(ruler,prevWall,snapTarget) 
+	add(savedWall,prevWall,snapTarget) 
 	{
 		
-		//ruler.setExactEnd(snapTarget);
-
-		this.startX = ruler.x1;
-		this.startY = ruler.y1;
-		this.endX = ruler.x2;
-		this.endY = ruler.y2;
-		this.lineLength = ruler.lineLength(snapTarget);
-		this.wallOrientation = ruler.orientation;
+		this.startX = savedWall.x1;
+		this.startY = savedWall.y1;
+		this.endX = savedWall.x2;
+		this.endY = savedWall.y2;		
+		this.lineLength = "Calculating";// ruler.lineLength(snapTarget);
+		this.wallOrientation = savedWall.orientation;
 		
 		var midPointX = this.startX;
 		var midPointY = this.startY;
@@ -143,7 +142,7 @@ export default class Wall
 
 
 		/* the last wall doesn't need a snapTarget */
-		if(!ruler.completed)
+		if(true)//!ruler.completed)
 		{/*rgba fill for 'none' */
 		var rectConnect = new fabric.Rect({ stroke:'rgba(0,0,0,0)',fill:'rgba(0,0,0,0)',strokeWidth:1, selectable: false, width: this.wallWidth, height: this.wallWidth, left: rectConnectX, top: rectConnectY, selectable: false });		
 		this.canvas.add(rectConnect);
@@ -161,6 +160,8 @@ export default class Wall
 		return wallContainer;
 
 	}
+
+
 
 	/*Draw all sides of the wall in the same style */
 	drawWallLine(points,wallStyle)
@@ -180,6 +181,9 @@ export default class Wall
 
 }
 
+
+
+
 /*items that make up a wall so we can delete as one */
 class WallContainer
 {
@@ -192,6 +196,7 @@ class WallContainer
 	orientation;
 	wallStyle; /*Wall or opening*/
 	exteriorSide;
+	savedWall;
 	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle)
 	{
 		this.topSide=topSide;
@@ -201,8 +206,11 @@ class WallContainer
 		this.snapTarget=Snap;
 		this.text = Text;
 		this.orientation = wallOrientation;
-		this.wallStyle = wallStyle;		
+		this.wallStyle = wallStyle;				
 	}
+
+
+
 
 	refreshExteriorSide()
 	{

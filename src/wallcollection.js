@@ -5,18 +5,25 @@ export default class WallCollection
 	
 	walls;
 	canvas;
+	saves;
 	 constructor(canvas)
 	 {
 		 this.walls = new Array();
+		 this.saves = new Array(); //track all the params we have added, so we can rebuild 
 		 this.canvas = canvas;
 	 }
 
 	 //Create a new wall
-	 add(ruler,snapTarget){
+	 add(ruler,snapTarget){		
+		let savedWall = new  SavedWall(ruler.x1,ruler.y1,ruler.x2,ruler.y2,ruler.orientation,snapTarget);//save so we can rebuild
+		this.saves.push(savedWall);
 		var prevWall = this.walls[this.walls.length-1]; //capture this so we can remove overlaps (also needed by add to determine if an opening)
 
 		var wall = new Wall(this.canvas);	
-		var wallContainer = wall.add(ruler,prevWall,snapTarget);
+		var wallContainer = wall.add(savedWall,prevWall,snapTarget);
+		
+		
+		
 
 		if (this.walls.length>0 ) // don't check for the first wall 
 		{
@@ -58,6 +65,12 @@ export default class WallCollection
 			wallContainer.exteriorSide = exteriorWall;
 			
 
+			//need to remeasure the exterior wall
+			let newLength = (prevWall.exteriorSide.x2-prevWall.exteriorSide.x1);
+			newLength = newLength + (prevWall.exteriorSide.y2-prevWall.exteriorSide.y1);
+			newLength = newLength.toFixed(1);
+			prevWall.text.set({text:newLength});
+
 	 	}
 		else{ //no shared corner, but we always want the first to be horizontal
 			wallContainer.exteriorSide = wallContainer.topSide;
@@ -65,6 +78,10 @@ export default class WallCollection
 		
 
 		wallContainer.refreshExteriorSide();
+
+
+
+
 		this.walls.push(wallContainer);
 
 		 ruler.f
@@ -206,7 +223,34 @@ export default class WallCollection
 	 delete()
 	 {
 		
-		var wallContainer = this.walls.pop();
+		//store the snapTarget of the penultimate wall ready for the next wall
+		let savedSnapTarget = this.walls[this.walls.length-2].snapTarget;
+		
+
+		//delete all wallContainers from the canvas 
+		while(this.walls.length>0)
+		{			
+			this.deleteWallContainer(this.walls.pop());
+		}
+		
+		
+
+		let tempSaves = this.saves; //adding the wall back on will add to saves.
+		this.saves = Array();
+
+		while(tempSaves.length>1) //0 based array, but leave one there as we don't want to rebuild the whole diagram (remember, we are deleting a wall)
+		{
+			var savedWall = tempSaves.shift();//saved wall is basically ruler  and a snapTarget
+			this.add(savedWall,savedWall.snapTarget)
+		}
+
+		return savedSnapTarget;		
+		
+	 }
+
+	 //remove wall container elements from the canvas
+	 deleteWallContainer(wallContainer)
+	 {
 		this.canvas.remove(wallContainer.leftSide);
 		this.canvas.remove(wallContainer.rightSide);
 		this.canvas.remove(wallContainer.bottomSide);
@@ -214,15 +258,37 @@ export default class WallCollection
 		this.canvas.remove(wallContainer.wall);
 		this.canvas.remove(wallContainer.snapTarget);
 		this.canvas.remove(wallContainer.text);
-
-		return  this.walls[this.walls.length-1].snapTarget;//-1 because walls is zero based
 	 }
-
 
 	 wallCount()
 	 {
 		 return this.walls.length+1;
 	 }
 
+
+}
+
+
+//store the initial parameters so we can rebuild the wall after a delete (reuse add)
+//(they may lose segments due to removal overals)
+class SavedWall{
+	snapTarget;	//this is the snapTarget used to start the wall
+	x1;
+	y1
+	x2;
+	y2;
+	orientation;
+	
+	
+	constructor(x1,y1,x2,y2,orientation,snapTarget)
+	{
+		this.snapTarget = snapTarget;
+		this.x1 = x1;
+		this.x2 = x2;
+		this.y1 = y1;
+		this.y2 = y2;
+		this.orientation = orientation;
+		
+	}
 
 }
