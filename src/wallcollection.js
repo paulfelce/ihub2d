@@ -55,18 +55,16 @@ export default class WallCollection
 				exteriorWall = wallContainer.bottomSide;
 			}
 
-
-
 			wallContainer.exteriorSide = exteriorWall;
-			wallContainer.refreshExteriorSide();
+			
 
 	 	}
-		 else{
-			wallContainer.exteriorSide = "top";
+		else{ //no shared corner, but we always want the first to be horizontal
+			wallContainer.exteriorSide = wallContainer.topSide;
 		 }
 		
 
-
+		wallContainer.refreshExteriorSide();
 		this.walls.push(wallContainer);
 
 		 ruler.f
