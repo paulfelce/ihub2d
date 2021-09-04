@@ -1,4 +1,3 @@
-//https://www.npmjs.com/package/node-polyfill-webpack-plugin
 import Grid from './grid.js'
 import Ruler from './ruler.js'
 import Wall from './wall.js'
@@ -12,11 +11,11 @@ function appStart(){
 	DebugText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(DebugText);		
 
-	var snapStart = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
-	canvas.add(snapStart);
-	snapTarget = snapStart;
+	snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
+	canvas.add(snapTarget);
+	snapTarget = snapTarget;
 	
-	ruler = new Ruler(canvas);
+	ruler = new Ruler(canvas,snapTarget);
 
 	
 }
@@ -29,30 +28,20 @@ var DebugText
     var ruler;
 		
 	appStart();
-
-
-
 		canvas.on('mouse:move', function(o){
             canvas.remove(text);
 			var pointer = canvas.getPointer(o.e);
-			
- 
 			if(!ruler.completed)
 			{
 				ruler.setEnd(pointer,snapTarget);
 			}
-			
 			canvas.renderAll();
-
 		});	
 
 
-		canvas.on('mouse:up', function(o){
-            
+		canvas.on('mouse:up', function(o){            
 			 var pointer = canvas.getPointer(o.e);
-
 			 
-
 			 //We've clicked the second point so draw the rectangle
 			if(o.button ===1)
 			{
@@ -102,12 +91,3 @@ var DebugText
 			opt.e.stopPropagation();
 		  })
 		
-
-				
-
-		//	http://fabricjs.com/fabric-intro-part-3  -- groups
-
-
-
-
-		//https://stackoverflow.com/questions/35141349/resizing-width-height-properties-of-fabricjs-rects

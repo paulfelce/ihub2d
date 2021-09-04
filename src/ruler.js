@@ -12,8 +12,12 @@ export default class Ruler
     wallWidth=25;
     completed=false;
     angleDegrees=0;
-    constructor(Canvas)
+    constructor(Canvas,snapStart)
     {
+        this.x1 = snapStart.left;
+        this.x2 = snapStart.left+50;
+        this.y1 = snapStart.top + snapStart.width/2;
+        this.y2 = snapStart.top + snapStart.width/2;
         this.canvas = Canvas;
         this.orientation = "h"; //default
         var points = [this.x1,this.y1, this.x2, this.y2];
