@@ -43,7 +43,7 @@ for(var i =0;i<=1200;i=i+50)
     points = [0,i,1200,i];
 
     gridLine = new fabric.Line(points,{
-    strokeWidth: .8,					
+    strokeWidth: 1,					
     stroke:'#e2e2e2'	,
     originX: 'center',
     originY: 'center',
@@ -59,7 +59,7 @@ for(var i =0;i<=1200;i=i+50)
 {
     var points = [i,0,i,1200];
     var gridLine = new fabric.Line(points,{
-    strokeWidth: .8,			
+    strokeWidth: 1,			
     stroke: '#e2e2e2',
     originX: 'center',
     originY: 'center',

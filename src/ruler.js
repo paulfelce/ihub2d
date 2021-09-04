@@ -85,7 +85,14 @@ export default class Ruler
         if(!this.completed)
         {
             this.drawRuler(pointer, snapTarget);
-            
+            this.drawGuide(pointer);
+        }
+        
+    }
+
+    //draw a line showing where pointer would line up
+    drawGuide(pointer)
+    {
             //redraw the guide-line
             if(this.orientation=='h')
             {
@@ -95,15 +102,6 @@ export default class Ruler
             {
                 this.lineGuide.set({y1:pointer.y,y2:pointer.y,x1:0,x2:1200});
             }
-
-        }
-        
-    }
-
-    //draw a line showing where pointer would line up
-    drawGuide(pointer)
-    {
-
 
     }
 
