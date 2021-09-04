@@ -120,10 +120,50 @@ export default class Wall
 		}
 
 
+		//Line to hide on overap
+		/*Vertical wall */
+		if(this.wallOrientation=='v')
+		{
+			if(prevWall.wall.left < rectWallX ) 
+			{
+				if(this.endY>this.startY) /* need to cover at top left */
+				{
+					
+					var hideLine;
+					var points = [rectWallX+5,rectWallY, rectWallX+5,rectWallY+25];
+					
+					hideLine= new fabric.Line(points, {
+						strokeWidth: 18,			
+						stroke: 'blue',
+						originX: 'center',
+						originY: 'center'	});
+	
+//					fillColour='#ff0000';
+//					this.canvas.add(hideLine);
+				}
+			}
+		}
 
-		//fill same as border so can't see overlaps
+		//Main wall /* Originally a rectangle, but self build so we can amend to hide overlap	
 		var rectWall = new fabric.Rect({ stroke:'000000',strokeWidth:1,fill:fillColour, selectable: false, width: rectWallWidth, height: rectWallHeight, left: rectWallX, top: rectWallY, selectable: false });		
-		this.canvas.add(rectWall);
+		//this.canvas.add(rectWall);
+
+		/*top side*/
+		var points = [rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY];
+		this.drawWallLine(points);
+
+		/*bottom side*/
+		points = [rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight];
+		this.drawWallLine(points);
+
+		/*left side*/
+		points = [rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight];
+		this.drawWallLine(points);
+
+		/*right side*/
+		points = [rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight];
+		this.drawWallLine(points);
+
 
 		/* the last wall doesn't need a snapTarget */
 		if(!ruler.completed)
@@ -135,8 +175,9 @@ export default class Wall
 		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
 		this.canvas.add(textX);
 
-		//Return an array of the objects so we can delete them if need be
 
+
+		//Return an array of the objects so we can delete them if need be
 		var wallContainer = new WallContainer(rectWall,rectConnect,textX,this.wallOrientation);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
@@ -144,9 +185,16 @@ export default class Wall
 
 	}
 
-
-
-
+	/*Draw all sides of the wall in the same style */
+	drawWallLine(points)
+	{
+		var wallLine= new fabric.Line(points, {
+			strokeWidth: 1,			
+			stroke: 'black',
+			originX: 'center',
+			originY: 'center'	});
+		this.canvas.add(wallLine);
+	}
 }
 
 /*items that make up a wall so we can delete as one */
@@ -166,3 +214,6 @@ class WallContainer
 	}
 
 }
+
+
+
