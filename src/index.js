@@ -8,7 +8,7 @@ function appStart(){
 	
 	var grid = new Grid(canvas);
 	
-	DebugText = new fabric.Text('Debug Text ', { left: 0, top: 0, fontSize: 12 });					
+	DebugText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(DebugText);		
 
 	var snapStart = new fabric.Rect({top:50,left:25,width:25,height:25,fill:"#000fff"});
@@ -132,6 +132,8 @@ var DebugText
 			if (zoom > 20) zoom = 20;
 			if (zoom < 0.01) zoom = 0.01;
 			canvas.setZoom(zoom);
+			var fs = 1/zoom *14;
+			DebugText.set({text:"Zoom " + zoom.toFixed(2) , fontSize:fs});
 			opt.e.preventDefault();
 			opt.e.stopPropagation();
 		  })

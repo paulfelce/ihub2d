@@ -21,7 +21,7 @@ export default class Wall
 	add(ruler,prevWall,snapTarget) 
 	{
 		
-		ruler.setExactEnd(snapTarget);
+		//ruler.setExactEnd(snapTarget);
 
 		this.startX = ruler.x1;
 		this.startY = ruler.y1;
