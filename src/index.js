@@ -36,6 +36,10 @@ function appStart(){
 
 		
 	appStart();
+
+
+
+
 		canvas.on('mouse:move', function(o){
             canvas.remove(text);
 			var pointer = canvas.getPointer(o.e);
@@ -61,6 +65,10 @@ function appStart(){
 		canvas.on('mouse:up', function(o){            
 			 var pointer = canvas.getPointer(o.e);
 			 
+			//We've clicked a measurement so update it
+			//Only allow on last wall ( or they all need updating).  For now user can enforce this logic
+
+
 			 //We've clicked the second point so draw the rectangle
 			if(o.button ===1)
 			{
@@ -96,7 +104,7 @@ function appStart(){
 				}
 				
 			}
-			 /* right click to delete a wall */
+			 /* right click to update dimesion on the last walld*/
 			 if(o.button ===3)
 			 {
 				if(ruler.loopComplete(pointer.x,pointer.y))
@@ -112,7 +120,24 @@ function appStart(){
 	        }				
 			
 		});
+		//if user presses d-delete the last wall
+		document.onkeyup = function(e) 
+		{	
+			switch (e.key) 
+			{
+				case 'd':
+				{
+					var snapTarget = wallCollection.delete();
+					ruler.setStart(snapTarget.left,snapTarget.top);
+				}
+				
+			}
 		
+			canvas.renderAll();			  
+		}
+
+
+
 		canvas.on('mouse:wheel', function(opt) {
 			var delta = opt.e.deltaY;
 			var zoom = canvas.getZoom();

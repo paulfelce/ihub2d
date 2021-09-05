@@ -195,7 +195,7 @@ export default class Wall
 			textX.set({angle:90});			
 		}
 
-
+		textX.set({tag:'Dimension'});
 		this.canvas.add(textX);
 
 
@@ -219,7 +219,8 @@ export default class Wall
 			strokeWidth: 1,			
 			stroke: strokeColour,
 			originX: 'center',
-			originY: 'center'	});
+			originY: 'center',
+			selectable:false	});
 		this.canvas.add(wallLine);
 
 		return wallLine;

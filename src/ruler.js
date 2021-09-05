@@ -13,6 +13,7 @@ export default class Ruler
     wallWidth=25;
     completed=false;
     angleDegrees=0;
+    lineLength; //have a copy we can read. Set it on mouse move
     constructor(Canvas,snapStart)
     {
         this.x1 = snapStart.left;
@@ -39,14 +40,15 @@ export default class Ruler
             stroke: 'blue',
             originX: 'center',
             originY: 'center',			
-            strokeDashArray: [5, 5]
+            strokeDashArray: [5, 5],
+            selectable:false
         });
 
         this.canvas.add(this.lineGuide);
 
         
         
-        this.label = new fabric.Text('Length ' + this.lineLength(snapStart), { left: this.x2, top: this.y2, fontSize: 12,selectable:false });					        
+        this.label = new fabric.Text('Length ' + this.lineLength, { left: this.x2, top: this.y2, fontSize: 12,selectable:false });					        
         this.canvas.add(this.label);	
 
     }
@@ -80,7 +82,7 @@ export default class Ruler
     allowNew(pointer,lastWall)
     {
         let result = true;
-        if(this.lineLength(lastWall.snapTarget)<25)
+        if(this.getlineLength(lastWall.snapTarget)<25)
         {
             result = false;
         }
@@ -100,7 +102,7 @@ export default class Ruler
         /*Set orientation based on angle so we can add openings */
         var snapTarget = lastWall.snapTarget;
         this.setOrientation(pointer);
-        
+         this.lineLength = this.getlineLength(snapTarget);
         
         
         if(!this.completed)
@@ -192,7 +194,7 @@ export default class Ruler
             lineColour = 'green';
         }
         this.line.set({ x1: rulerx1, y1: rulery1, x2: rulerx2, y2: rulery2,stroke:lineColour });
-        this.label.set({ text: 'Length ' + this.lineLength(snapTarget), left: this.x2, top: this.y2 });
+        this.label.set({ text: 'Length ' + this.lineLength, left: this.x2, top: this.y2 });
     }/* end draw ruler */
 
         /* Check to see if the loop has been completed*/
@@ -218,7 +220,7 @@ export default class Ruler
     
 
     /*return the length of the current line */
-    lineLength(snapTarget)
+    getlineLength(snapTarget)
     {				
         //return this.angleDegrees;
 
@@ -270,11 +272,11 @@ export default class Ruler
 
         if(this.x1!=this.x2)
         {
-            return Math.abs(this.x2-rulerStart.x).toFixed(1);
+            return (10*Math.abs(this.x2-rulerStart.x)).toFixed(0);
         }
         else
         {
-            return Math.abs(this.y2-rulerStart.y).toFixed(1);
+            return (10*Math.abs(this.y2-rulerStart.y)).toFixed(0);
         }
         
      

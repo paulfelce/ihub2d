@@ -23,7 +23,7 @@ export default class WallCollection
 
 	 //Create a new wall
 	 add(ruler,snapTarget){		
-		let savedWall = new  SavedWall(ruler.x1,ruler.y1,ruler.x2,ruler.y2,ruler.orientation,snapTarget,ruler.lineLength(snapTarget));//save so we can rebuild
+		let savedWall = new  SavedWall(ruler.x1,ruler.y1,ruler.x2,ruler.y2,ruler.orientation,snapTarget,ruler.lineLength);//save so we can rebuild
 		this.saves.push(savedWall);
 		var prevWall = this.walls[this.walls.length-1]; //capture this so we can remove overlaps (also needed by add to determine if an opening)
 
