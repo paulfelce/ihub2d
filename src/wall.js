@@ -11,10 +11,11 @@ export default class Wall
 	 canvas;
 	 wallWidth=25;
 	 exteriorWall;
-	 
+	 wallStyle;
 	 constructor(Canvas)	 
 	{
 		this.canvas = Canvas;
+		this.wallStyle='wall';
 	}
 
 	/* user has placed the end of the wall. Put a wall in*/
@@ -30,6 +31,46 @@ export default class Wall
 		this.lineLength = "Calculating";// ruler.lineLength(snapTarget);
 		this.wallOrientation = savedWall.orientation;
 		
+		
+		//need to shift if adding a  wall/opening along the same direction
+		if(prevWall === undefined)//first wall
+		{
+			this.wallStyle = 'wall';
+		}
+		else
+		{
+			if(prevWall.orientation == savedWall.orientation)
+			{
+				this.wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
+				if(savedWall.orientation =='h')
+				{
+					if(this.endX > prevWall.leftSide.x1)//new section is to right of prev section (use endX , because ruler.startX is to right of start of wall, even when moving left)
+					{
+						this.startX = this.startX + this.wallWidth;					
+					}
+					else//new section is to left of prev section
+					{
+						this.startX = this.startX - this.wallWidth;					
+					}
+				}
+				else //wall is Vertical
+				{
+					{
+						if(this.endY > prevWall.bottomSide.y1)//new section below the prev one
+						{
+							this.startY = this.startY + this.wallWidth;					
+						}
+						else //new section above prev one
+						{
+							this.startY = this.startY - this.wallWidth;					
+						}
+					}
+				}
+			}
+		}
+
+
+
 		var midPointX = this.startX;
 		var midPointY = this.startY;
 
@@ -39,10 +80,6 @@ export default class Wall
 		else {
 			midPointY = this.startY + (this.endY - this.startY) / 2;
 		}
-
-		
-		var rectConnectWidth = this.wallWidth;
-		var rectConnectHeight = this.wallWidth;
 		
 		var rectWallWidth = this.wallWidth;
 		var rectWallHeight = this.wallWidth;
@@ -99,15 +136,7 @@ export default class Wall
 			rectConnectX = this.startX;
 		}
 
-		//Add our wall and connector to the canvas
-		var wallStyle = "wall";		
 
-		if(!(prevWall===undefined))
-		{
-			// when a wall continues in the same direction we need to flip between wall and opening
-			if(prevWall.orientation == this.wallOrientation)
-			wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
-		}
 
 
 		//Line to hide on overap
@@ -135,10 +164,10 @@ export default class Wall
 		
 		/* draw four walls instead of a rectangle so we can hide overlaps */		
 
-		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],wallStyle);
-		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);		
-		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],wallStyle);			
-		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],wallStyle);
+		var topside = this.drawWallLine([rectWallX,rectWallY,rectWallX + rectWallWidth,rectWallY],this.wallStyle);
+		var bottomside = this.drawWallLine([rectWallX,rectWallY+rectWallHeight,rectWallX + rectWallWidth,rectWallY+rectWallHeight],this.wallStyle);		
+		var leftside = this.drawWallLine([rectWallX,rectWallY,rectWallX ,rectWallY+rectWallHeight],this.wallStyle);			
+		var rightside = this.drawWallLine([rectWallX+rectWallWidth,rectWallY,rectWallX + rectWallWidth,rectWallY+rectWallHeight],this.wallStyle);
 
 
 		/* the last wall doesn't need a snapTarget */
@@ -154,7 +183,7 @@ export default class Wall
 
 
 		//Return an array of the objects so we can delete them if need be
-		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,wallStyle);
+		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;

@@ -29,10 +29,13 @@ export default class WallCollection
 		{
 			let sharedCorner = this.sharedCorner(wallContainer,prevWall);
 
-			if (wallContainer.wallStyle = 'wall') // allow overlaps for openings
+
+
+			if (wallContainer.wallStyle == 'wall') // allow overlaps for openings
 			{
 				this.removeOverlaps(wallContainer,prevWall,snapTarget.width,sharedCorner);
 			}			
+
 			//Set the exterior wall.  Using the logic that the topSide is alway exterior for our first wall, and the exterior must follow this 
 			let exteriorWall = wallContainer.topSide;
 			if (wallContainer.orientation == 'v' && sharedCorner == 'topleft')
@@ -61,7 +64,13 @@ export default class WallCollection
 			{
 				exteriorWall = wallContainer.bottomSide;
 			}
-
+/*
+			//when continuing an existing wall the exterior is always the same
+			if(wallContainer.orientation == prevWall.orientation)
+			{	
+				exteriorWall = prevWall.exteriorSide;
+			}
+*/
 			wallContainer.exteriorSide = exteriorWall;
 			
 
@@ -97,60 +106,89 @@ export default class WallCollection
 	 sharedCorner(wallContainer,prevWall)
 	 {
 		var result = ''
-		if(wallContainer.orientation=='v')
+		if(wallContainer.orientation != prevWall.orientation)
 		{
-			if(prevWall.topSide.y1 == wallContainer.topSide.y1)
-			{	
-				if(prevWall.leftSide.x1 == wallContainer.leftSide.x1) //share top left
+			if(wallContainer.orientation=='v')
+			{
+				if(prevWall.topSide.y1 == wallContainer.topSide.y1)
+				{	
+					if(prevWall.leftSide.x1 == wallContainer.leftSide.x1) //share top left
+					{
+						result = 'topleft';
+					}
+					else
+					{
+						result = 'topright';
+					}
+				}
+				else // vertical connected at bottom 
 				{
-					result = 'topleft';
+					if(prevWall.leftSide.x1 == wallContainer.leftSide.x1)
+					{
+						result = 'bottomleft';
+					}
+					else //share bottom right
+					{
+						result = 'bottomright';
+					}
+					
+				}
+			}
+			if(wallContainer.orientation=='h') // horizontal wall
+			{
+				if(prevWall.leftSide.x1 == wallContainer.leftSide.x1) //share at left
+				{	
+					if(prevWall.leftSide.y1 == wallContainer.leftSide.y1) //connected at top left
+					{
+						result = 'topleft';
+						
+					}
+					else //share  bottom left
+					{
+						result = 'bottomleft';
+					}
+				}
+				else // horizontal share at right
+				{
+					if(prevWall.leftSide.y1 == wallContainer.leftSide.y1) //share at top right
+					{
+						result = 'topright';
+					}
+					else //share at bottom right
+					{
+						result = 'bottomright';
+					}
+					
+				}
+			}
+		}	//continued walls are connected differently
+		if(wallContainer.orientation == prevWall.orientation)	
+		{
+			if(wallContainer.orientation =='h' )
+			{
+				if( wallContainer.leftSide.x1 > prevWall.leftSide.x1)
+				{
+					result='topleft';
 				}
 				else
 				{
-					result = 'topright';
+					result='topright';
 				}
 			}
-			else // vertical connected at bottom 
+
+			if(wallContainer.orientation =='v' )
 			{
-				if(prevWall.leftSide.x1 == wallContainer.leftSide.x1)
+				if( wallContainer.topSide.y1 > prevWall.topSide.y1)
 				{
-					result = 'bottomleft';
+					result='topleft';
 				}
-				else //share bottom right
+				else
 				{
-					result = 'bottomright';
+					result='topright';
 				}
-				
 			}
 		}
-		if(wallContainer.orientation=='h') // horizontal wall
-		{
-			if(prevWall.leftSide.x1 == wallContainer.leftSide.x1) //share at left
-			{	
-				if(prevWall.leftSide.y1 == wallContainer.leftSide.y1) //connected at top left
-				{
-					result = 'topleft';
-					
-				}
-				else //share  bottom left
-				{
-					result = 'bottomleft';
-				}
-			}
-			else // horizontal share at right
-			{
-				if(prevWall.leftSide.y1 == wallContainer.leftSide.y1) //share at top right
-				{
-					result = 'topright';
-				}
-				else //share at bottom right
-				{
-					result = 'bottomright';
-				}
-				
-			}
-			
-		}
+	
 		
 		return result;
 	 }
