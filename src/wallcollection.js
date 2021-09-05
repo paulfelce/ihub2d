@@ -42,34 +42,8 @@ export default class WallCollection
 				}
 			}			
 
-			//Set the exterior wall.  Using the logic that the topSide is alway exterior for our first wall, and the exterior must follow this 
-			let exteriorWall = wallContainer.topSide;
-			if (wallContainer.orientation == 'v' && sharedCorner == 'topleft')
-			{
-				exteriorWall = wallContainer.rightSide;
-			}			
-			if (wallContainer.orientation == 'v' && sharedCorner == 'topright')
-			{
-				exteriorWall = wallContainer.rightSide;
-			}
-			if (wallContainer.orientation == 'v' && sharedCorner == 'bottomleft')
-			{
-				exteriorWall = wallContainer.leftSide;
-			}
-			if (wallContainer.orientation == 'v' && sharedCorner == 'bottomright')
-			{
-				exteriorWall = wallContainer.leftSide;
-			}
-
-			if (wallContainer.orientation == 'h' && sharedCorner == 'topright')
-			{
-				exteriorWall = wallContainer.bottomSide;
-			}
-
-			if (wallContainer.orientation == 'h' && sharedCorner == 'bottomright')
-			{
-				exteriorWall = wallContainer.bottomSide;
-			}
+			
+			let exteriorWall = getExteriorWall(wallContainer, sharedCorner);
 
 			wallContainer.exteriorSide = exteriorWall;
 			
@@ -98,7 +72,7 @@ export default class WallCollection
 		return wallContainer.snapTarget;
 	 }
 	 
-
+	 
 
 
 	 //determine which corner of the snapTarget is shared by the new wall
@@ -330,4 +304,30 @@ class SavedWall{
 		
 	}
 
+}
+//Set the exterior wall.  Using the logic that the topSide is alway exterior for our first wall, and the exterior must follow this 
+function getExteriorWall(wallContainer, sharedCorner) {
+	
+	let exteriorWall = wallContainer.topSide;
+	if (wallContainer.orientation == 'v' && sharedCorner == 'topleft') {
+		exteriorWall = wallContainer.rightSide;
+	}
+	if (wallContainer.orientation == 'v' && sharedCorner == 'topright') {
+		exteriorWall = wallContainer.rightSide;
+	}
+	if (wallContainer.orientation == 'v' && sharedCorner == 'bottomleft') {
+		exteriorWall = wallContainer.leftSide;
+	}
+	if (wallContainer.orientation == 'v' && sharedCorner == 'bottomright') {
+		exteriorWall = wallContainer.leftSide;
+	}
+
+	if (wallContainer.orientation == 'h' && sharedCorner == 'topright') {
+		exteriorWall = wallContainer.bottomSide;
+	}
+
+	if (wallContainer.orientation == 'h' && sharedCorner == 'bottomright') {
+		exteriorWall = wallContainer.bottomSide;
+	}
+	return exteriorWall;
 }
