@@ -45,8 +45,7 @@ function appStart(){
 
 				if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
 				{
-					wallContainer = new EmptyContainer();
-					wallContainer.snapTarget = snapTarget;
+					wallContainer = new EmptyContainer(snapTarget);					
 				}
 				else
 				{
@@ -74,9 +73,25 @@ function appStart(){
 					{
 						ruler.completed = true;
 					}
+
+					let allowNew = true;
+					var wallContainer;
+					if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
+					{
+						wallContainer = new EmptyContainer(snapTarget);
+					}
+					else
+					{
+						wallContainer = wallCollection.lastWall();					
+					}
 					
-					snapTarget = wallCollection.add(ruler,snapTarget);	
-					ruler.setStart(snapTarget.left,snapTarget.top); // set the ruler to start on the NEW snaptarget					
+					allowNew=ruler.allowNew(pointer,wallContainer)
+					
+					if(allowNew)
+					{
+						snapTarget = wallCollection.add(ruler,snapTarget);	
+						ruler.setStart(snapTarget.left,snapTarget.top); // set the ruler to start on the NEW snaptarget					
+					}
 					
 				}
 				
@@ -113,8 +128,14 @@ function appStart(){
 			opt.e.stopPropagation();
 		  })
 		
-
+	//pass this as a wall container when building our first wall
 	class EmptyContainer
 	{
-		snapTarget;
+		snapTarget;	
+		wallStyle;
+		constructor(snapTarget)
+		{
+			this.snapTarget = snapTarget;
+			this.wallStyle = 'wall';
+		}
 	}

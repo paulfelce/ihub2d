@@ -60,7 +60,7 @@ export default class Ruler
 
 
 
-    setOrientation(pointer,lastWall)
+    setOrientation(pointer)
     {
         let angleDegrees= Math.atan2(pointer.y-this.y1,pointer.x-this.x1) * 180/Math.PI ;
         this.angleDegrees=angleDegrees;// just debugging. Show in debug text
@@ -74,19 +74,32 @@ export default class Ruler
             this.orientation = 'v';
         }
 
-        if(lastWall.wallStyle=='opening')  //can't go round a corner on an opening
+    }
+
+    //check conditions for creating a new wall
+    allowNew(pointer,lastWall)
+    {
+        let result = true;
+        if(this.lineLength(lastWall.snapTarget)<25)
         {
-            this.orientation = lastWall.orientation;
+            result = false;
         }
+        //a wall cannot end with an opening
+        if(lastWall.wallStyle=='opening' && lastWall.orientation != this.orientation)
+        {
+            result = false;
+        }
+
+        return result;
 
     }
 
-    //setEnd(pointer,snapTarget)
     setEnd(pointer,lastWall)
     {
+
         /*Set orientation based on angle so we can add openings */
         var snapTarget = lastWall.snapTarget;
-        this.setOrientation(pointer,lastWall);
+        this.setOrientation(pointer);
         
         
         
