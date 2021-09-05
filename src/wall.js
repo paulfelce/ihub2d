@@ -100,6 +100,7 @@ export default class Wall
 		var rectConnectX;
 		var rectConnectY;
 
+		let direction ='?';
 		//calculate the small wall and the two ends
 		if (this.wallOrientation=="h") 
 		{// Wall is horizontal
@@ -108,12 +109,14 @@ export default class Wall
 				rectWallWidth = this.endX - this.startX;
 				rectWallX = this.startX ;
 				rectConnectX = this.endX - this.wallWidth;
+				direction='LR' //best stage to track which way wall is going
 			}
 			else
 			{
 				rectWallWidth = this.startX - this.endX;
 				rectWallX = this.endX ;
 				rectConnectX = this.endX;
+				direction='RL'
 			}
 			
 			rectConnectY = this.startY;			
@@ -125,12 +128,14 @@ export default class Wall
 				rectWallHeight = this.endY - this.startY;
 				rectWallY = this.startY;
 				rectConnectY = this.endY - this.wallWidth;
+				direction='TB'
 			}
 			else
 			{
 				rectWallHeight = this.startY - this.endY;
 				rectWallY = this.endY;
 				rectConnectY = this.endY;
+				direction='BT'
 			}
 
 			rectConnectX = this.startX;
@@ -183,7 +188,7 @@ export default class Wall
 
 
 		//Return an array of the objects so we can delete them if need be
-		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle);
+		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;
@@ -222,11 +227,12 @@ class WallContainer
 	rightSide;
 	snapTarget;
 	text;
-	orientation;
+	orientation; 
+	direction;//now we have direction, we could dervive orientation
 	wallStyle; /*Wall or opening*/
 	exteriorSide;
 	savedWall;
-	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle)
+	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle,direction)
 	{
 		this.topSide=topSide;
 		this.bottomSide=bottomSide;
@@ -236,6 +242,7 @@ class WallContainer
 		this.text = Text;
 		this.orientation = wallOrientation;
 		this.wallStyle = wallStyle;				
+		this.direction = direction;
 	}
 
 

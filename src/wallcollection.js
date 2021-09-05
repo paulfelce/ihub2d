@@ -36,14 +36,14 @@ export default class WallCollection
 
 			if (wallContainer.wallStyle == 'wall') // allow overlaps for openings
 			{	
-				if(prevWall.wallStyle=='wall') //an opening is shifted to and there are no overlaps.
+				if(prevWall.wallStyle=='wall') //an opening is shifted so there are no overlaps.
 				{
 					this.removeOverlaps(wallContainer,prevWall,snapTarget.width,sharedCorner);
 				}
 			}			
 
 			
-			let exteriorWall = getExteriorWall(wallContainer, sharedCorner);
+			let exteriorWall = getExteriorWall(wallContainer, prevWall);
 
 			wallContainer.exteriorSide = exteriorWall;
 			
@@ -86,7 +86,7 @@ export default class WallCollection
 			{
 				if(prevWall.topSide.y1 == wallContainer.topSide.y1)
 				{	
-					if(prevWall.leftSide.x1 == wallContainer.leftSide.x1) //share top left
+					if(prevWall.leftSide.x1 == wallContainer.leftSide.x1) //join top left
 					{
 						result = 'topleft';
 					}
@@ -101,7 +101,7 @@ export default class WallCollection
 					{
 						result = 'bottomleft';
 					}
-					else //share bottom right
+					else //join bottom right
 					{
 						result = 'bottomright';
 					}
@@ -117,7 +117,7 @@ export default class WallCollection
 						result = 'topleft';
 						
 					}
-					else //share  bottom left
+					else //join  bottom left
 					{
 						result = 'bottomleft';
 					}
@@ -306,14 +306,93 @@ class SavedWall{
 
 }
 //Set the exterior wall.  Using the logic that the topSide is alway exterior for our first wall, and the exterior must follow this 
-function getExteriorWall(wallContainer, sharedCorner) {
-	
+function getExteriorWall(wallContainer, prevWall) {
+
 	let exteriorWall = wallContainer.topSide;
+	let wallDirection;
+	
+	//wall direction is determined when wall created
+	wallDirection = wallContainer.direction;
+	//New wall, not a section - all directions have same exterior regardless of prior wall. (discovered by working on all combos)
+	if(prevWall.orientation!=wallContainer.orientation)
+	{
+		switch(wallDirection)
+		{
+			case "TB":
+				exteriorWall = wallContainer.rightSide;
+				break;
+			case "LR":
+				exteriorWall = wallContainer.topSide;
+				break;
+			case "BT":
+				exteriorWall = wallContainer.leftSide;
+				break;
+			case "RL":
+				exteriorWall = wallContainer.bottomSide;
+				break;				
+		}
+		
+		/*
+		if(prevWall.exteriorSide === prevWall.topSide && wallDirection =='TB')
+		{
+			exteriorWall = wallContainer.rightSide;
+		}
+		
+		if(prevWall.exteriorSide === prevWall.bottomSide && wallDirection =='TB')
+		{
+			exteriorWall = wallContainer.rightSide;
+		}
+
+
+		if(prevWall.exteriorSide === prevWall.rightSide && wallDirection =='LR')
+		{
+			exteriorWall = wallContainer.topSide;
+		}
+
+		if(prevWall.exteriorSide === prevWall.leftSide && wallDirection =='LR')
+		{
+			exteriorWall = wallContainer.topSide;
+		}
+
+
+		if(prevWall.exteriorSide === prevWall.topSide && wallDirection =='BT')
+		{
+			exteriorWall = wallContainer.leftSide;
+		}
+
+
+		if(prevWall.exteriorSide === prevWall.bottomSide && wallDirection =='BT')
+		{
+			exteriorWall = wallContainer.leftSide;
+		}
+
+		if(prevWall.exteriorSide === prevWall.rightSide && wallDirection =='RL')
+		{
+			exteriorWall = wallContainer.bottomSide;
+		}
+
+		if(prevWall.exteriorSide === prevWall.leftSide && wallDirection =='RL')
+		{
+			exteriorWall = wallContainer.bottomSide;
+		}
+
+		*/
+	}
+	
+	//creating a section, not a new wall (ie flipped orientation)
+	if(prevWall.orientation==prevWall.orientation)
+	{
+
+	}
+	
+
+
+	/*
 	if (wallContainer.orientation == 'v' && sharedCorner == 'topleft') {
 		exteriorWall = wallContainer.rightSide;
 	}
 	if (wallContainer.orientation == 'v' && sharedCorner == 'topright') {
-		exteriorWall = wallContainer.rightSide;
+		exteriorWall = wallContainer.leftSide;
 	}
 	if (wallContainer.orientation == 'v' && sharedCorner == 'bottomleft') {
 		exteriorWall = wallContainer.leftSide;
@@ -329,5 +408,6 @@ function getExteriorWall(wallContainer, sharedCorner) {
 	if (wallContainer.orientation == 'h' && sharedCorner == 'bottomright') {
 		exteriorWall = wallContainer.bottomSide;
 	}
+	*/
 	return exteriorWall;
 }
