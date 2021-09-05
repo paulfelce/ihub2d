@@ -13,6 +13,14 @@ export default class WallCollection
 		 this.canvas = canvas;
 	 }
 
+
+	 //return the last wall in the array
+	 lastWall()
+	 {
+		return this.walls[this.walls.length-1];
+	 }
+
+
 	 //Create a new wall
 	 add(ruler,snapTarget){		
 		let savedWall = new  SavedWall(ruler.x1,ruler.y1,ruler.x2,ruler.y2,ruler.orientation,snapTarget);//save so we can rebuild
@@ -290,7 +298,7 @@ export default class WallCollection
 		this.canvas.remove(wallContainer.text);
 	 }
 
-	 wallCount()
+	 get wallCount()
 	 {
 		 return this.walls.length+1;
 	 }

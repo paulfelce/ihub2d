@@ -2,7 +2,18 @@ import Grid from './grid.js'
 import Ruler from './ruler.js'
 import Wall from './wall.js'
 import WallCollection from './wallcollection.js'
+import Wallcontainer from './wall'
 const fabric = require("fabric").fabric;
+
+
+var zoomText 
+var devText
+var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true}); 	
+var wallCollection = new WallCollection(canvas);
+var text;		
+var snapTarget;		         
+var ruler;
+
 
 function appStart(){
 	
@@ -22,13 +33,7 @@ function appStart(){
 	
 }
 
-	var zoomText 
-	var devText
-	var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true}); 	
-	var wallCollection = new WallCollection(canvas);
-    var text;		
-	var snapTarget;		         
-    var ruler;
+
 		
 	appStart();
 		canvas.on('mouse:move', function(o){
@@ -36,7 +41,19 @@ function appStart(){
 			var pointer = canvas.getPointer(o.e);
 			if(!ruler.completed)
 			{
-				ruler.setEnd(pointer,snapTarget);
+				var wallContainer; //ruler must have a snapTarget. usually we get this from the walls . but on the first wall we add a fake
+
+				if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
+				{
+					wallContainer = new EmptyContainer();
+					wallContainer.snapTarget = snapTarget;
+				}
+				else
+				{
+					wallContainer = wallCollection.lastWall();					
+				}
+				ruler.setEnd(pointer,wallContainer);
+				//ruler.setEnd(pointer,snapTarget);
 			}
 			canvas.renderAll();
 		});	
@@ -94,3 +111,8 @@ function appStart(){
 			opt.e.stopPropagation();
 		  })
 		
+
+	class EmptyContainer
+	{
+		snapTarget;
+	}
