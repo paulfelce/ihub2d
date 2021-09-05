@@ -21,19 +21,17 @@ export default class WallCollection
 
 		var wall = new Wall(this.canvas);	
 		var wallContainer = wall.add(savedWall,prevWall,snapTarget);
-		
-		
-		
-
+	
 		if (this.walls.length>0 ) // don't check for the first wall 
 		{
 			let sharedCorner = this.sharedCorner(wallContainer,prevWall);
 
-
-
 			if (wallContainer.wallStyle == 'wall') // allow overlaps for openings
-			{
-				this.removeOverlaps(wallContainer,prevWall,snapTarget.width,sharedCorner);
+			{	
+				if(prevWall.wallStyle=='wall') //an opening is shifted to and there are no overlaps.
+				{
+					this.removeOverlaps(wallContainer,prevWall,snapTarget.width,sharedCorner);
+				}
 			}			
 
 			//Set the exterior wall.  Using the logic that the topSide is alway exterior for our first wall, and the exterior must follow this 
@@ -64,17 +62,11 @@ export default class WallCollection
 			{
 				exteriorWall = wallContainer.bottomSide;
 			}
-/*
-			//when continuing an existing wall the exterior is always the same
-			if(wallContainer.orientation == prevWall.orientation)
-			{	
-				exteriorWall = prevWall.exteriorSide;
-			}
-*/
+
 			wallContainer.exteriorSide = exteriorWall;
 			
 
-			//need to remeasure the exterior wall
+			//need to remeasure the exterior wall (beacuse there are no angled walls, it's simply across OR up so we can add them)
 			let newLength = (prevWall.exteriorSide.x2-prevWall.exteriorSide.x1);
 			newLength = newLength + (prevWall.exteriorSide.y2-prevWall.exteriorSide.y1);
 			newLength = newLength.toFixed(1);
