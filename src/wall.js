@@ -71,15 +71,7 @@ export default class Wall
 
 
 
-		var midPointX = this.startX;
-		var midPointY = this.startY;
 
-		if (this.startY== this.endY) {
-			midPointX = this.startX + (this.endX - this.startX) / 2;
-		}
-		else {
-			midPointY = this.startY + (this.endY - this.startY) / 2;
-		}
 		
 		var rectWallWidth = this.wallWidth;
 		var rectWallHeight = this.wallWidth;
@@ -182,7 +174,28 @@ export default class Wall
 		this.canvas.add(rectConnect);
 		}
 		
+
+		var midPointX;
+		var midPointY;
+		if(this.wallOrientation == 'h')
+		{
+			midPointX = rectWallX + rectWallWidth/2;
+			midPointY = (rectWallY + rectWallHeight/2)-8;
+		}
+		else //vertical wall
+		{
+			midPointX = rectWallX + rectWallWidth/2+8;
+			midPointY = (rectWallY + rectWallHeight/2)-8;
+		}
+
+
 		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
+		if(direction == 'TB' || direction == 'BT')
+		{
+			textX.set({angle:90});			
+		}
+
+
 		this.canvas.add(textX);
 
 
