@@ -28,7 +28,7 @@ export default class Wall
 		this.startY = savedWall.y1;
 		this.endX = savedWall.x2;
 		this.endY = savedWall.y2;		
-		this.lineLength = "Calculating";// ruler.lineLength(snapTarget);
+		this.lineLength = savedWall.lineLength;// ruler.lineLength(snapTarget);
 		this.wallOrientation = savedWall.orientation;
 		
 		

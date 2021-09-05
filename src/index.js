@@ -7,7 +7,7 @@ const fabric = require("fabric").fabric;
 
 
 var zoomText 
-var devText
+//var devText
 var canvas  = new fabric.Canvas('canvas', {  hoverCursor: 'pointer',selection: false,fireRightClick:true,stopContextMenu:true}); 	
 var wallCollection = new WallCollection(canvas);
 var text;		
@@ -22,8 +22,8 @@ function appStart(){
 	zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(zoomText);	
 	
-	devText = new fabric.Text('exterior:top', { left: 100, top: 0, fontSize: 12 });					
-	canvas.add(devText);	
+	//devText = new fabric.Text('exterior:top', { left: 100, top: 0, fontSize: 12 });					
+	//canvas.add(devText);	
 
 	snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
 	canvas.add(snapTarget);
@@ -104,9 +104,11 @@ function appStart(){
 			zoom *= 0.999 ** delta;
 			if (zoom > 20) zoom = 20;
 			if (zoom < 0.01) zoom = 0.01;
-			canvas.setZoom(zoom);
+			//canvas.setZoom(zoom);
+
+			canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom)
 			var fs = 1/zoom *14;
-			zoomText.set({text:"Zoom " + zoom.toFixed(2) , fontSize:fs});
+			zoomText.set({text:"Zoom " + (100*zoom).toFixed(0) , fontSize:fs});
 			opt.e.preventDefault();
 			opt.e.stopPropagation();
 		  })
