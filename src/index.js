@@ -105,18 +105,9 @@ function appStart(){
 				
 			}
 			 /* right click to update dimesion on the last walld*/
-			 if(o.button ===3)
-			 {
-				if(ruler.loopComplete(pointer.x,pointer.y))
-				{
-					
-					ruler.setStart(pointer.x,pointer.y)
-				}
-				else
-				{
-					snapTarget = wallCollection.delete();
-					ruler.setStart(snapTarget.left,snapTarget.top);
-				}
+			if(o.button ===3)
+			{
+			
 	        }				
 			
 		});
