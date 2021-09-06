@@ -103,7 +103,11 @@ function addWall(o)
 				{
 					//ruler and first snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
 					
-					snapTarget = new fabric.Rect({left:pointer.x-12,top:pointer.y-12,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
+					//align the snap target to top left
+					let snapX = pointer.x - pointer.x % 50;
+					let snapY = pointer.y - pointer.y % 50;
+
+					snapTarget = new fabric.Rect({left:snapX,top:snapY,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
 					snapTarget.set({tag:'first'});				
 					canvas.add(snapTarget);
 					ruler = new Ruler(canvas,snapTarget);
