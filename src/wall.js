@@ -20,7 +20,7 @@ export default class Wall
 
 	/* user has placed the end of the wall. Put a wall in*/
 	/* pass the previous wall so we know if it's an opening or not */
-
+	/* savedWall used to be the ruler object which we used for co-ordinates. This is replaced with savedWall*/
 	add(savedWall,prevWall,snapTarget) 
 	{
 		
@@ -184,7 +184,7 @@ export default class Wall
 		}
 		else //vertical wall
 		{
-			midPointX = rectWallX + rectWallWidth/2+8;
+			midPointX = rectWallX + rectWallWidth/2-12;
 			midPointY = (rectWallY + rectWallHeight/2)-8;
 		}
 
@@ -192,7 +192,7 @@ export default class Wall
 		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
 		if(direction == 'TB' || direction == 'BT')
 		{
-			textX.set({angle:90});			
+			textX.set({angle:0}); // looks sharper unrotated
 		}
 
 		textX.set({tag:'Dimension'});
