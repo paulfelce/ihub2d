@@ -18,6 +18,7 @@ export default class Wall
 		this.wallStyle='wall';
 	}
 
+	
 	/* user has placed the end of the wall. Put a wall in*/
 	/* pass the previous wall so we know if it's an opening or not */
 	/* savedWall used to be the ruler object which we used for co-ordinates. This is replaced with savedWall*/
@@ -31,7 +32,61 @@ export default class Wall
 		this.lineLength = savedWall.lineLength;// ruler.lineLength(snapTarget);
 		this.wallOrientation = savedWall.orientation;
 		
-		
+		//set up values for a first wall
+		if(prevWall === undefined)
+		{
+			prevWall = new Object();
+			prevWall.orientation = 'h';
+			prevWall.wallStyle = 'opening'; //this will get flipped to being a wall
+
+			let leftSide = new Object();
+			leftSide.x1 = snapTarget.x1-snapTarget.width;
+
+			prevWall.leftSide = leftSide;
+
+			let bottomSide = new Object();
+			bottomSide.y1 = snapTarget.top + snapTarget.width;
+
+			this.startX = this.startX - snapTarget.width;//the start ruler emits from the right of the snapTarget
+
+		}
+
+		//updated ruler means we need to start wall at an offset from the ruler
+		// (the ruler will be at the midpoint of the end of the connecting side)
+		if(this.wallOrientation=='h')
+		{
+			if(prevWall.orientation=='v' && this.startX < this.endX) //LR wall
+			{				
+				this.startX = this.startX - this.wallWidth;
+				this.startY  = this.startY - this.wallWidth/2;
+			}
+			if(prevWall.orientation=='v' && this.startX > this.endX)
+			{
+				this.startY = this.startY - this.wallWidth/2;
+				this.startX = this.startX + this.wallWidth;
+			}
+
+			if(prevWall.orientation=='h' && this.startX < this.endX) //LR opening
+			{
+				this.startY = this.startY - this.wallWidth/2;
+				this.startX = this.startX + this.wallWidth;
+			}
+
+		}
+		else //adding a vertical wall
+		{
+			if(prevWall.orientation == 'h' && this.startY < this.endY) //TB
+			{
+				this.startX = this.startX - this.wallWidth/2;
+				
+			}
+			if(prevWall.orientation == 'h' && this.endY<this.startY)//BT
+			{
+				this.startX = this.startX - this.wallWidth/2;
+				this.startY= this.startY + this.wallWidth;
+			}
+			
+		}
 		//need to shift if adding a  wall/opening along the same direction
 		if(prevWall === undefined)//first wall
 		{
