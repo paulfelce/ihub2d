@@ -25,38 +25,79 @@ function appStart(){
 	//devText = new fabric.Text('exterior:top', { left: 100, top: 0, fontSize: 12 });					
 	//canvas.add(devText);	
 
-	snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
-	canvas.add(snapTarget);
+	//snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
+	//snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
+	//canvas.add(snapTarget);
 
-	ruler = new Ruler(canvas,snapTarget);
+	//snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
+	//ruler = new Ruler(canvas,snapTarget);
 
 	
 }
 
+function addWall(o)
+{
 
+
+
+	var pointer = canvas.getPointer(o.e);
+	if(!ruler.completed)
+	{	
+		let rulerLoopComplete;
+		rulerLoopComplete = ruler.loopComplete(pointer.x,pointer.y);
+		if(rulerLoopComplete)
+		{
+			ruler.completed = true;
+		}
+
+		let allowNew = true;
+		var wallContainer;
+		
+		if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
+		{
+			wallContainer = new EmptyContainer(snapTarget);
+		}
+		else
+		{
+			wallContainer = wallCollection.lastWall();					
+		}
+		
+		allowNew=ruler.allowNew(pointer,wallContainer)
+		
+		if(allowNew)
+		{
+			snapTarget = wallCollection.add(ruler,snapTarget);	
+			ruler.setStart(snapTarget.left,snapTarget.top); // set the ruler to start on the NEW snaptarget					
+		}
+	
+	}
+}
 		
 	appStart();
 
-
-
-
-		canvas.on('mouse:move', function(o){
+		canvas.on('mouse:move', function(o)
+		{
             canvas.remove(text);
 			var pointer = canvas.getPointer(o.e);
-			if(!ruler.completed)
+			
+			if(!(snapTarget===undefined))//don't try and use the ruler until first point placed
 			{
-				var wallContainer; //ruler must have a snapTarget. usually we get this from the walls . but on the first wall we add a fake
+				if(!ruler.completed)
+				{
+					var wallContainer; //ruler must have a snapTarget. usually we get this from the walls . but on the first wall we add a fake
 
-				if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
-				{
-					wallContainer = new EmptyContainer(snapTarget);					
+					if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
+					{
+						wallContainer = new EmptyContainer(snapTarget);					
+					}
+					else
+					{
+						wallContainer = wallCollection.lastWall();					
+					}
+					
+						ruler.setEnd(pointer,wallContainer);
 				}
-				else
-				{
-					wallContainer = wallCollection.lastWall();					
-				}
-				ruler.setEnd(pointer,wallContainer);
-				//ruler.setEnd(pointer,snapTarget);
+		
 			}
 			canvas.renderAll();
 		});	
@@ -72,42 +113,25 @@ function appStart(){
 			 //We've clicked the second point so draw the rectangle
 			if(o.button ===1)
 			{
-				var pointer = canvas.getPointer(o.e);
-				if(!ruler.completed)
-				{	
-					let rulerLoopComplete;
-					rulerLoopComplete = ruler.loopComplete(pointer.x,pointer.y);
-					if(rulerLoopComplete)
-					{
-						ruler.completed = true;
-					}
-
-					let allowNew = true;
-					var wallContainer;
-					if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
-					{
-						wallContainer = new EmptyContainer(snapTarget);
-					}
-					else
-					{
-						wallContainer = wallCollection.lastWall();					
-					}
+				if(snapTarget===undefined)
+				{
+					//ruler and first snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
 					
-					allowNew=ruler.allowNew(pointer,wallContainer)
-					
-					if(allowNew)
-					{
-						snapTarget = wallCollection.add(ruler,snapTarget);	
-						ruler.setStart(snapTarget.left,snapTarget.top); // set the ruler to start on the NEW snaptarget					
-					}
-					
+					snapTarget = new fabric.Rect({left:pointer.x-12,top:pointer.y-12,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});					
+					canvas.add(snapTarget);
+					ruler = new Ruler(canvas,snapTarget);
+		
+				}
+				else
+				{
+					addWall(o);
 				}
 				
 			}
 			 /* right click to update dimesion on the last walld*/
 			if(o.button ===3)
 			{
-			
+				wallCollection.changeDimension();
 	        }				
 			
 		});
@@ -144,6 +168,9 @@ function appStart(){
 			opt.e.stopPropagation();
 		  })
 		
+
+
+
 	//pass this as a wall container when building our first wall
 	class EmptyContainer
 	{
