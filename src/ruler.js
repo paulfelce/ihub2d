@@ -53,13 +53,57 @@ export default class Ruler
 
     }
 
-    setStart(x,y)
+    //configure the start point based on the current direction and the previous wall
+    //this makes the ruler look more natural and makes it simpler to measure
+    setStart(pointer,snapTarget)
     {
-        this.x1 = x;
-        this.y1 = y;
+        this.x1 = snapTarget.left;
+        this.y1 = snapTarget.top;
+
+        if(pointer.x>=snapTarget.left+snapTarget.width)
+        {
+            this.x1=snapTarget.left+snapTarget.width;
+        }
+        
+        
+        if(pointer.y>=snapTarget.top+snapTarget.width)
+        {
+            this.y1=snapTarget.top+snapTarget.width;
+        }
+        
         this.line.set({x1:this.x1,y1:this.y1})
+
     }
 
+    setEnd(pointer,lastWall)
+    {
+
+        /*Set orientation based on angle so we can add openings */
+        var snapTarget = lastWall.snapTarget;   
+        this.setStart(pointer,snapTarget);//always check the start so the line starts at the correct side of the prevWall
+        this.setOrientation(pointer);
+
+        if (this.orientation=='h')
+        {
+            this.y2=this.y1;
+            this.x2 = pointer.x;
+        }
+        else
+        {
+            this.x2=this.x1;
+            this.y2 = pointer.y;
+        }
+
+        this.lineLength = this.getlineLength(snapTarget);
+        
+        
+        if(!this.completed)
+        {
+            this.drawRuler(pointer, snapTarget);
+            this.drawGuide(pointer);
+        }
+        
+    }
 
 
     setOrientation(pointer)
@@ -78,40 +122,6 @@ export default class Ruler
 
     }
 
-    //check conditions for creating a new wall
-    allowNew(pointer,lastWall)
-    {
-        let result = true;
-        if(this.getlineLength(lastWall.snapTarget)<25)
-        {
-            result = false;
-        }
-        //a wall cannot end with an opening
-        if(lastWall.wallStyle=='opening' && lastWall.orientation != this.orientation)
-        {
-            result = false;
-        }
-
-        return result;
-
-    }
-
-    setEnd(pointer,lastWall)
-    {
-
-        /*Set orientation based on angle so we can add openings */
-        var snapTarget = lastWall.snapTarget;
-        this.setOrientation(pointer);
-         this.lineLength = this.getlineLength(snapTarget);
-        
-        
-        if(!this.completed)
-        {
-            this.drawRuler(pointer, snapTarget);
-            this.drawGuide(pointer);
-        }
-        
-    }
 
     //draw a line showing where pointer would line up
     drawGuide(pointer)
@@ -128,7 +138,7 @@ export default class Ruler
 
     }
 
-
+    //this.x1 and this.y1 should be set for the start of the line based on the pointer relative to the snapTarget
     drawRuler(pointer, snapTarget) {
         var x = pointer.x;
         var y = pointer.y;
@@ -136,64 +146,20 @@ export default class Ruler
 
         if (this.orientation == "h") 
         {
-            y = snapTarget.top;
-            this.y1 = y; //reset the position to the snap target
-            // Set start of line depending if we are drawing right or left
-            if (x >= snapTarget.left) {
-                this.x1 = snapTarget.left;            }
-
-            else {
-                this.x1 = snapTarget.left + this.wallWidth;
-            }
-
-            rulerx1 = this.x1;
-            rulerx2 = this.x2;
-
+            this.y1 = snapTarget.top + snapTarget.width/2; //don't allow an angled wall
+            y=this.y1;
         }
-
-        else {
-            x = snapTarget.left ;
-            this.x1 = x; // if we'moved across, then down, the line start may have been moved to the far edge so reset it.
-            
-            if (y >= snapTarget.top) {
-                this.y1 = snapTarget.top;
-            }
-
-            else {
-                this.y1 = snapTarget.top + this.wallWidth;
-            }
-        }
-
-
-
-        this.x2 = x;
-        this.y2 = y;
-
-        //The co-ords for the ruler are top left for a wall going left to right
-        //but we want to visualuse the line through the middle of the wall. Rulerx and y are the corods for the line, not the wall
-        var rulerx1; 
-        var rulerx2;
-        var rulery1;
-        var rulery2;
-
-        if (this.orientation == "h") {
-            rulerx1 = this.x1;
-            rulerx2 = this.x2;
-            rulery1 = this.y1 + this.wallWidth / 2;
-            rulery2 = this.y2 + this.wallWidth / 2;
-        }
-        else {
-            rulerx1 = this.x1 + this.wallWidth / 2;
-            rulerx2 = this.x2 + this.wallWidth / 2;
-            rulery1 = this.y1;
-            rulery2 = this.y2;
+        else
+        {
+            this.x1 = snapTarget.left + snapTarget.width/2; //don't allow an angled wall    
+            x=this.x1;
         }
 
         let lineColour = 'red'      ;
-        if(this.loopComplete(pointer.x,pointer.y)){
-            lineColour = 'green';
-        }
-        this.line.set({ x1: rulerx1, y1: rulery1, x2: rulerx2, y2: rulery2,stroke:lineColour });
+        //if(this.loopComplete(pointer.x,pointer.y)){
+        //    lineColour = 'green';
+        //}
+        this.line.set({ x1: this.x1, y1: this.y1, x2: x, y2: y,stroke:lineColour });
         this.label.set({ text: 'Length ' + this.lineLength, left: this.x2, top: this.y2 });
     }/* end draw ruler */
 
@@ -264,7 +230,8 @@ export default class Ruler
         }
 
         //special case on the first wall
-        if(snapTarget.left == 50 && snapTarget.top == 50)
+        if(snapTarget.tag=='first')
+        //if(snapTarget.left == 50 && snapTarget.top == 50)
         {
             rulerStart.x = snapTarget.left;
         }
@@ -282,7 +249,23 @@ export default class Ruler
      
     }
     
+    //check conditions for creating a new wall
+    allowNew(pointer,lastWall)
+    {
+        let result = true;
+        if(this.getlineLength(lastWall.snapTarget)<25)
+        {
+            result = false;
+        }
+        //a wall cannot end with an opening
+        if(lastWall.wallStyle=='opening' && lastWall.orientation != this.orientation)
+        {
+            result = false;
+        }
 
+        return result;
+
+    }
 
 }
 

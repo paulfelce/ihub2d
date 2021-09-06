@@ -21,25 +21,11 @@ function appStart(){
 
 	zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
 	canvas.add(zoomText);	
-	
-	//devText = new fabric.Text('exterior:top', { left: 100, top: 0, fontSize: 12 });					
-	//canvas.add(devText);	
-
-	//snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
-	//snapTarget = new fabric.Rect({top:50,left:50,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});
-	//canvas.add(snapTarget);
-
-	//snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
-	//ruler = new Ruler(canvas,snapTarget);
-
-	
+		
 }
 
 function addWall(o)
 {
-
-
-
 	var pointer = canvas.getPointer(o.e);
 	if(!ruler.completed)
 	{	
@@ -67,7 +53,7 @@ function addWall(o)
 		if(allowNew)
 		{
 			snapTarget = wallCollection.add(ruler,snapTarget);	
-			ruler.setStart(snapTarget.left,snapTarget.top); // set the ruler to start on the NEW snaptarget					
+			ruler.setStart(pointer,snapTarget); // set the ruler to start on the NEW snaptarget					
 		}
 	
 	}
@@ -117,7 +103,8 @@ function addWall(o)
 				{
 					//ruler and first snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
 					
-					snapTarget = new fabric.Rect({left:pointer.x-12,top:pointer.y-12,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});					
+					snapTarget = new fabric.Rect({left:pointer.x-12,top:pointer.y-12,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
+					snapTarget.set({tag:'first'});				
 					canvas.add(snapTarget);
 					ruler = new Ruler(canvas,snapTarget);
 		

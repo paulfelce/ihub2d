@@ -192,7 +192,7 @@ export default class Wall
 		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
 		if(direction == 'TB' || direction == 'BT')
 		{
-			textX.set({angle:0}); // looks sharper unrotated
+			textX.set({angle:90}); // looks sharper unrotated
 		}
 
 		textX.set({tag:'Dimension'});
