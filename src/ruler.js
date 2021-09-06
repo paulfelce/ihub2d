@@ -272,11 +272,11 @@ export default class Ruler
 
         if(this.x1!=this.x2)
         {
-            return (10*Math.abs(this.x2-rulerStart.x)).toFixed(0);
+            return (Math.abs(this.x2-rulerStart.x)).toFixed(0);
         }
         else
         {
-            return (10*Math.abs(this.y2-rulerStart.y)).toFixed(0);
+            return (Math.abs(this.y2-rulerStart.y)).toFixed(0);
         }
         
      
