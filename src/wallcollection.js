@@ -51,7 +51,7 @@ export default class WallCollection
 			wallContainer.exteriorSide = exteriorWall;
 			
 
-			//need to remeasure the exterior wall (beacuse there are no angled walls, it's simply across OR up so we can add them)
+			//need to remeasure the previous exterior wall (beacuse there are no angled walls, it's simply across OR up so we can add them)
 			let newLength = (prevWall.exteriorSide.x2-prevWall.exteriorSide.x1);
 			newLength = newLength + (prevWall.exteriorSide.y2-prevWall.exteriorSide.y1);
 			newLength = newLength.toFixed(1);
@@ -64,9 +64,6 @@ export default class WallCollection
 		
 
 		wallContainer.refreshExteriorSide();
-
-
-
 
 		this.walls.push(wallContainer);
 

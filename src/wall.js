@@ -36,18 +36,19 @@ export default class Wall
 		if(prevWall === undefined)
 		{
 			prevWall = new Object();
-			prevWall.orientation = 'h';
+			prevWall.orientation = 'N'; //NEW wall, bypass the offseting for the first wall
 			prevWall.wallStyle = 'opening'; //this will get flipped to being a wall
 
 			let leftSide = new Object();
-			leftSide.x1 = snapTarget.x1-snapTarget.width;
+			leftSide.x1 = snapTarget.left;
 
 			prevWall.leftSide = leftSide;
 
 			let bottomSide = new Object();
-			bottomSide.y1 = snapTarget.top + snapTarget.width;
+			bottomSide.y1 = snapTarget.top;
 
-			this.startX = this.startX - snapTarget.width;//the start ruler emits from the right of the snapTarget
+			prevWall.bottomSide = bottomSide;
+			
 
 		}
 
@@ -56,11 +57,11 @@ export default class Wall
 		if(this.wallOrientation=='h')
 		{
 			if(prevWall.orientation=='v' && this.startX < this.endX) //LR wall
-			{				
-				this.startX = this.startX - this.wallWidth;
+			{	
+				//this.startX = this.startX - this.wallWidth/2;
 				this.startY  = this.startY - this.wallWidth/2;
 			}
-			if(prevWall.orientation=='v' && this.startX > this.endX)
+			if(prevWall.orientation=='v' && this.startX > this.endX) //RL wall
 			{
 				this.startY = this.startY - this.wallWidth/2;
 				this.startX = this.startX + this.wallWidth;
@@ -68,25 +69,33 @@ export default class Wall
 
 			if(prevWall.orientation=='h' && this.startX < this.endX) //LR opening
 			{
-				this.startY = this.startY - this.wallWidth/2;
+				this.startY = this.startY + this.wallWidth*3;
 				this.startX = this.startX + this.wallWidth;
 			}
 
 		}
-		else //adding a vertical wall
+		if(this.wallOrientation=='v') //adding a vertical wall
 		{
 			if(prevWall.orientation == 'h' && this.startY < this.endY) //TB
 			{
+			//	this.startY = this.startY + this.wallWidth/2;
 				this.startX = this.startX - this.wallWidth/2;
 				
 			}
-			if(prevWall.orientation == 'h' && this.endY<this.startY)//BT
+			if(prevWall.orientation == 'h' && this.endY<this.startY)//BT wall
 			{
 				this.startX = this.startX - this.wallWidth/2;
-				this.startY= this.startY + this.wallWidth;
+				this.startY= this.startY + this.wallWidth ;
 			}
 			
 		}
+		/* Special offsetting for the first wall of a building */
+		if(prevWall.orientation=='N')
+		{
+			//this.startX = this.startX - this.wallWidth;
+			this.startY  = this.startY - this.wallWidth/2;
+		}
+
 		//need to shift if adding a  wall/opening along the same direction
 		if(prevWall === undefined)//first wall
 		{

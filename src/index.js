@@ -131,7 +131,7 @@ function addWall(o)
 		{	
 			switch (e.key) 
 			{
-				case 'd':
+				case 'Delete':
 				{
 					var snapTarget = wallCollection.delete();
 					ruler.setStart(snapTarget.left,snapTarget.top);
