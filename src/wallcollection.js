@@ -229,6 +229,69 @@ export default class WallCollection
 			
 	}
 	 
+
+	//resize the last Wall
+	resize(){
+		let newDimension = window.prompt("Enter new length in mm");
+		newDimension = newDimension * 0.1; //(canvs is in cm)
+	
+		if (newDimension!=0)//if user has cancelled then we've nothing to do
+		{
+			let wall = this.walls[this.walls.length-1];
+			let snapTarget = wall.snapTarget;		
+			
+			
+			if(wall.direction=='LR') //LR
+			{
+				wall.topSide.set({x2:wall.topSide.x1+newDimension}); 
+				wall.bottomSide.set({x2:wall.topSide.x2}); 
+				wall.rightSide.set({x1:wall.topSide.x2,x2:wall.topSide.x2}); 
+				snapTarget.set({left:wall.topSide.x2 - snapTarget.width});
+				newDimension = (10 * newDimension).toFixed(0);
+				let midX = wall.leftSide.x1 + (wall.rightSide.x1 - wall.leftSide.x1)/2;
+				wall.text.set({text:newDimension,left:midX});
+			}
+			if(wall.direction=='RL') //LR
+			{
+				wall.topSide.set({x1:wall.topSide.x2-newDimension}); 
+				wall.bottomSide.set({x1:wall.topSide.x1}); 
+				wall.leftSide.set({x1:wall.topSide.x1,x2:wall.topSide.x1}); 
+				snapTarget.set({left:wall.topSide.x1});
+				newDimension = (10 * newDimension).toFixed(0);
+				let midX = wall.leftSide.x1 + (wall.rightSide.x1 - wall.leftSide.x1)/2;
+				wall.text.set({text:newDimension,left:midX});
+			}
+			
+
+			if(wall.direction=='TB')
+			{
+				wall.leftSide.set({y2:wall.topSide.y2+newDimension}); 
+				wall.rightSide.set({y2:wall.leftSide.y2}); 
+				wall.bottomSide.set({y1:wall.leftSide.y2,y2:wall.leftSide.y2}); 
+				snapTarget.set({top:wall.bottomSide.y1-snapTarget.width});
+				newDimension = (10 * newDimension).toFixed(0);
+				let midY = wall.leftSide.y1 + (wall.bottomSide.y1 - wall.topSide.y1)/2;
+				wall.text.set({text:newDimension,top:midY});
+			}
+
+
+			if(wall.direction=='BT')
+			{
+				wall.leftSide.set({y1:wall.bottomSide.y1-newDimension}); 
+				wall.rightSide.set({y1:wall.leftSide.y1}); 
+				wall.topSide.set({y1:wall.leftSide.y1,y2:wall.leftSide.y1}); 
+				snapTarget.set({top:wall.topSide.y1});
+				newDimension = (10 * newDimension).toFixed(0);
+				let midY = wall.leftSide.y1 + (wall.bottomSide.y1 - wall.topSide.y1)/2;
+				wall.text.set({text:newDimension,top:midY});
+			}
+
+
+		}
+
+		this.canvas.renderAll();
+	}
+
 	//change the dimension on the last wall (delete the last wall\section and re-add)
 	changeDimension()
 	{
@@ -252,8 +315,8 @@ export default class WallCollection
 		let finalWall = tempSaves.shift()// get the final wall\section and modify it with the new dimension
 		if(finalWall.direction=="LR")
 		{
-			finalWall.x2 = finalWall.x1 +  newDimension;
-			finalWall.lineLength = newDimension;
+			finalWall.x2 = finalWall.x1 +  newDimension/10;
+			finalWall.lineLength = newDimension/10;
 			this.add(finalWall,finalWall.snapTarget);
 		}
 

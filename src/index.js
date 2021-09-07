@@ -123,7 +123,8 @@ function addWall(o)
 			 /* right click to update dimesion on the last walld*/
 			if(o.button ===3)
 			{
-				wallCollection.changeDimension();
+				//wallCollection.changeDimension();
+				wallCollection.resize();
 	        }				
 			
 		});
