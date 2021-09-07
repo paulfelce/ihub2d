@@ -124,36 +124,16 @@ export default class Wall
 			{
 				this.wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
 				if(savedWall.orientation =='h')
-				{
-					if(this.endX > prevWall.leftSide.x1)//new section is to right of prev section (use endX , because ruler.startX is to right of start of wall, even when moving left)
-					{
-						this.startX = this.startX + this.wallWidth;					
-					}
-					else//new section is to left of prev section
-					{
-						this.startX = this.startX - this.wallWidth;					
-					}
+				{	//new section is left : right of prev one
+					this.startX =(this.endX > prevWall.leftSide.x1)  ? this.startX + this.wallWidth:this.startX - this.wallWidth;					
 				}
 				else //wall is Vertical
-				{
-					{
-						if(this.endY > prevWall.bottomSide.y1)//new section below the prev one
-						{
-							this.startY = this.startY + this.wallWidth;					
-						}
-						else //new section above prev one
-						{
-							this.startY = this.startY - this.wallWidth;					
-						}
-					}
+				{	//new section is below:above previous one
+					this.startY = (this.endY > prevWall.bottomSide.y1)? this.startY + this.wallWidth : this.startY = this.startY - this.wallWidth;										
 				}
 			}
 		}
 
-
-
-
-		
 		var rectWallWidth = this.wallWidth;
 		var rectWallHeight = this.wallWidth;
 		
