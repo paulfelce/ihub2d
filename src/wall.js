@@ -58,41 +58,58 @@ export default class Wall
 		{
 			if(prevWall.orientation=='v' && this.startX < this.endX) //LR wall
 			{	
-				//this.startX = this.startX - this.wallWidth/2;
+				this.startx  = this.startY - this.wallWidth;				
 				this.startY  = this.startY - this.wallWidth/2;
 			}
-			if(prevWall.orientation=='v' && this.startX > this.endX) //RL wall
+			if(prevWall.orientation=='h' && this.startX < this.endX) //LR section
 			{
-				this.startY = this.startY - this.wallWidth/2;
-				this.startX = this.startX + this.wallWidth;
+				this.startY = this.startY - this.wallWidth/2;	
+
 			}
 
-			if(prevWall.orientation=='h' && this.startX < this.endX) //LR opening
+			if(prevWall.orientation=='v' && this.startX > this.endX) //RL wall
 			{
-				this.startY = this.startY + this.wallWidth*3;
 				this.startX = this.startX + this.wallWidth;
+				this.startY = this.startY - this.wallWidth/2;				
 			}
+
+			if(prevWall.orientation=='h' && this.startX > this.endX) //RL-section
+			{
+				this.startX = this.startX + this.wallWidth;
+				this.startY = this.startY - this.wallWidth/2;			
+			}
+
+
 
 		}
 		if(this.wallOrientation=='v') //adding a vertical wall
 		{
 			if(prevWall.orientation == 'h' && this.startY < this.endY) //TB
-			{
-			//	this.startY = this.startY + this.wallWidth/2;
-				this.startX = this.startX - this.wallWidth/2;
-				
+			{			
+				this.startX = this.startX - this.wallWidth/2;				
 			}
+
+			if(prevWall.orientation == 'v' && this.startY < this.endY) //TB-section
+			{			
+				this.startX = this.startX - this.wallWidth/2;				
+			}
+
+
 			if(prevWall.orientation == 'h' && this.endY<this.startY)//BT wall
 			{
 				this.startX = this.startX - this.wallWidth/2;
 				this.startY= this.startY + this.wallWidth ;
 			}
+			if(prevWall.orientation == 'v' && this.endY<this.startY)//BT opening
+			{
+				this.startX = this.startX - this.wallWidth/2;
+				this.startY= this.startY + this.wallWidth;
+			}
 			
 		}
 		/* Special offsetting for the first wall of a building */
 		if(prevWall.orientation=='N')
-		{
-			//this.startX = this.startX - this.wallWidth;
+		{			
 			this.startY  = this.startY - this.wallWidth/2;
 		}
 
