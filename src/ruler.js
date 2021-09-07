@@ -56,27 +56,47 @@ export default class Ruler
 
     //configure the start point based on the current direction and the previous wall
     //this makes the ruler look more natural and makes it simpler to measure
-    setStart(pointer,snapTarget)
+    setStart(pointer,lastWall)
     {
+        let snapTarget = lastWall.snapTarget;
         this.x1 = snapTarget.left;
         this.y1 = snapTarget.top;
-
-        if(pointer.x>=snapTarget.left+snapTarget.width)
+        if(snapTarget.stroke =='blue') //colour of snap target identifies start
         {
-            this.x1=snapTarget.left+snapTarget.width;
+            this.x1 = snapTarget.left; //the very first ruler measures from the left of the snapTarget
+            
         }
+        else
+        {
+            if(pointer.x>snapTarget.left+snapTarget.width)
+            {         
+                this.x1 = (lastWall.exteriorSide === lastWall.rightSide)?snapTarget.left+snapTarget.width:this.x1=snapTarget.left;            
+            }
+            
+            if(pointer.x<snapTarget.left+snapTarget.width)
+            {         
+                this.x1 = (lastWall.exteriorSide === lastWall.rightSide)?snapTarget.left+snapTarget.width:this.x1=snapTarget.left;            
+            }
+    
+            if(pointer.y>snapTarget.top+snapTarget.width)
+            {
+                this.y1=snapTarget.top;//+snapTarget.width;
+            }
+            
+            if(pointer.y<snapTarget.top+snapTarget.width)
+            {
+                if(lastWall.orientation=='h')
+                {
+                this.y1 = (lastWall.exteriorSide === lastWall.topSide)? lastWall.topSide.y1 : lastWall.bottomSide.y1;
+                }
+            }
+        }   
+    
+/*
+     
+*/
         
         
-        if(pointer.y>=snapTarget.top+snapTarget.width)
-        {
-            this.y1=snapTarget.top;
-        }
-        
-        //the very first ruler measures from the left of the snapTarget
-        if(!this.firstSet)
-        {
-            this.x1 = snapTarget.left;
-        }
 
         this.line.set({x1:this.x1,y1:this.y1})
 
@@ -87,7 +107,7 @@ export default class Ruler
 
         /*Set orientation based on angle so we can add openings */
         var snapTarget = lastWall.snapTarget;   
-        this.setStart(pointer,snapTarget);//always check the start so the line starts at the correct side of the prevWall
+        this.setStart(pointer,lastWall);//always check the start so the line starts at the correct side of the prevWall
         this.setOrientation(pointer);
 
         if (this.orientation=='h')

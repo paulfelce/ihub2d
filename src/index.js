@@ -111,6 +111,7 @@ function addWall(o)
 					snapTarget.set({tag:'first'});				
 					canvas.add(snapTarget);
 					ruler = new Ruler(canvas,snapTarget);
+					ruler.firstSet = true; //we have set the first point so no longer need special calcs
 		
 				}
 				else

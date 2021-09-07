@@ -54,22 +54,40 @@ export default class Wall
 
 		//updated ruler means we need to start wall at an offset from the ruler
 		// (the ruler will be at the midpoint of the end of the connecting side)
+		let w = this.wallWidth;
 		if(this.wallOrientation=='h')
 		{
 			if(prevWall.orientation=='v' && this.startX < this.endX) //LR wall
 			{	
-				this.startx  = this.startY - this.wallWidth;				
-				this.startY  = this.startY - this.wallWidth/2;
+				if(snapTarget.stroke=='blue')
+				{ // first section is always horizontal and a special case
+					this.startX  = this.startX - this.wallWidth;				
+					this.startY  = this.startY - this.wallWidth/2;
+				}
+				else
+				{									
+					this.startY  = this.startY - this.wallWidth/2;
+					if(prevWall.exteriorSide == prevWall.rightSide)
+					{
+						this.startX = this.startX - w;
+					}
+				}
 			}
 			if(prevWall.orientation=='h' && this.startX < this.endX) //LR section
 			{
-				this.startY = this.startY - this.wallWidth/2;	
+				
+					this.startX = this.startX - this.wallWidth;
+					this.startY = this.startY - this.wallWidth/2;					
 
 			}
 
 			if(prevWall.orientation=='v' && this.startX > this.endX) //RL wall
 			{
+				
+				if(prevWall.exteriorSide===prevWall.leftSide)
+				{
 				this.startX = this.startX + this.wallWidth;
+				}
 				this.startY = this.startY - this.wallWidth/2;				
 			}
 
@@ -98,7 +116,11 @@ export default class Wall
 			if(prevWall.orientation == 'h' && this.endY<this.startY)//BT wall
 			{
 				this.startX = this.startX - this.wallWidth/2;
-				this.startY= this.startY + this.wallWidth ;
+				if(prevWall.exteriorSide === prevWall.topSide)
+				{
+					this.startY= this.startY + this.wallWidth ;
+				}
+				
 			}
 			if(prevWall.orientation == 'v' && this.endY<this.startY)//BT opening
 			{
