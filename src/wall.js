@@ -76,8 +76,8 @@ export default class Wall
 			if(prevWall.orientation=='h' && this.startX < this.endX) //LR section
 			{
 				
-					this.startX = this.startX - this.wallWidth;
-					this.startY = this.startY - this.wallWidth/2;					
+					this.startX = prevWall.rightSide.x1;
+					this.startY = prevWall.topSide.y1;
 
 			}
 
@@ -93,7 +93,9 @@ export default class Wall
 
 			if(prevWall.orientation=='h' && this.startX > this.endX) //RL-section
 			{
-				this.startX = this.startX + this.wallWidth;
+				
+				//this.startX = this.startX + this.wallWidth;
+			
 				this.startY = this.startY - this.wallWidth/2;			
 			}
 
@@ -122,10 +124,10 @@ export default class Wall
 				}
 				
 			}
-			if(prevWall.orientation == 'v' && this.endY<this.startY)//BT opening
+			if(prevWall.orientation == 'v' && this.endY<this.startY)//BT-section
 			{
 				this.startX = this.startX - this.wallWidth/2;
-				this.startY= this.startY + this.wallWidth;
+				//this.startY= this.startY - this.wallWidth;
 			}
 			
 		}
@@ -135,6 +137,11 @@ export default class Wall
 			this.startY  = this.startY - this.wallWidth/2;
 		}
 
+		if (savedWall.orientation == prevWall.orientation) // the ruler has determined the orientation and passed it in as savedWall
+		{
+			this.wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
+		}
+/*
 		//need to shift if adding a  wall/opening along the same direction
 		if(prevWall === undefined)//first wall
 		{
@@ -155,7 +162,7 @@ export default class Wall
 				}
 			}
 		}
-
+*/
 		var rectWallWidth = this.wallWidth;
 		var rectWallHeight = this.wallWidth;
 		

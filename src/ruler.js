@@ -69,8 +69,15 @@ export default class Ruler
         else
         {
             if(pointer.x>snapTarget.left+snapTarget.width)
-            {         
-                this.x1 = (lastWall.exteriorSide === lastWall.rightSide)?snapTarget.left+snapTarget.width:this.x1=snapTarget.left;            
+            {   
+                if(lastWall.orientation=='v') //new wall
+                {
+                    this.x1 = (lastWall.exteriorSide === lastWall.rightSide)?snapTarget.left+snapTarget.width:this.x1=snapTarget.left;            
+                }
+                else//new section
+                {
+                    this.x1 = (lastWall.exteriorSide === lastWall.leftSide)?snapTarget.left:this.x1=snapTarget.left+snapTarget.width;            
+                }
             }
             
             if(pointer.x<snapTarget.left+snapTarget.width)
@@ -80,7 +87,14 @@ export default class Ruler
     
             if(pointer.y>snapTarget.top+snapTarget.width)
             {
-                this.y1=snapTarget.top;//+snapTarget.width;
+                if(lastWall.orientation == 'h')//new wall
+                {
+                    this.y1=snapTarget.top;
+                }
+                else //new section
+                {
+                    this.y1=snapTarget.top+snapTarget.width;
+                }
             }
             
             if(pointer.y<snapTarget.top+snapTarget.width)
