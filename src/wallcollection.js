@@ -54,7 +54,7 @@ export default class WallCollection
 			//need to remeasure the previous exterior wall (beacuse there are no angled walls, it's simply across OR up so we can add them)
 			let newLength = (prevWall.exteriorSide.x2-prevWall.exteriorSide.x1);
 			newLength = newLength + (prevWall.exteriorSide.y2-prevWall.exteriorSide.y1);
-			newLength = newLength.toFixed(1);
+			newLength = (10*newLength).toFixed(0);
 			prevWall.text.set({text:newLength});
 
 	 	}

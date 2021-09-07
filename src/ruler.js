@@ -223,7 +223,7 @@ export default class Ruler
             result = Math.abs(this.line.x2-this.line.x1) 
         }        
         
-        return result.toFixed(1);
+        return (10*result).toFixed(0);
     }
 
 

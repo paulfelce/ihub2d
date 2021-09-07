@@ -276,6 +276,7 @@ export default class Wall
 		if(direction == 'TB' || direction == 'BT')
 		{
 			textX.set({angle:90}); // looks sharper unrotated
+			textX.set({left:textX.left+15});// rotated will start outside the wall (and wall is narrow)
 		}
 
 		textX.set({tag:'Dimension'});
