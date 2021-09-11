@@ -292,44 +292,6 @@ export default class WallCollection
 		this.canvas.renderAll();
 	}
 
-	//change the dimension on the last wall (delete the last wall\section and re-add)
-	changeDimension()
-	{
-		let newDimension = window.prompt("Enter new length in mm");
-
-		//delete all wallContainers from the canvas 		
-		while(this.walls.length>0)
-		{			
-			this.deleteWallContainer(this.walls.pop());
-		}
-
-		let tempSaves = this.saves; //adding the wall back on will add to saves.
-		this.saves = Array();
-
-		while(tempSaves.length>1) //0 based array, but leave one there as we don't want to rebuild the whole diagram (remember, we are deleting a wall)
-		{
-			var savedWall = tempSaves.shift();//saved wall is basically ruler  and a snapTarget
-			this.add(savedWall,savedWall.snapTarget)
-		}
-
-		let finalWall = tempSaves.shift()// get the final wall\section and modify it with the new dimension
-		if(finalWall.direction=="LR")
-		{
-			finalWall.x2 = finalWall.x1 +  newDimension/10;
-			finalWall.lineLength = newDimension/10;
-			this.add(finalWall,finalWall.snapTarget);
-		}
-
-		if(finalWall.direction=="RL")
-		{
-			finalWall.x2 = finalWall.x1 +  newDimension;
-			finalWall.lineLength = newDimension;
-			this.add(finalWall,finalWall.snapTarget);
-		}
-
-	}
-
-
 	/* remove the last wall and send back the new snapTarget */
 	 delete()
 	 {

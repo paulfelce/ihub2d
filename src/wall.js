@@ -32,6 +32,9 @@ export default class Wall
 		this.lineLength = savedWall.lineLength;// ruler.lineLength(snapTarget);
 		this.wallOrientation = savedWall.orientation;
 		
+
+		let rulerCoordinates = new RulerCoordinates(this.startX,this.endX,this.startY,this.endY);
+
 		//set up values for a first wall
 		if(prevWall === undefined)
 		{
@@ -141,28 +144,7 @@ export default class Wall
 		{
 			this.wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
 		}
-/*
-		//need to shift if adding a  wall/opening along the same direction
-		if(prevWall === undefined)//first wall
-		{
-			this.wallStyle = 'wall';
-		}
-		else
-		{
-			if(prevWall.orientation == savedWall.orientation)
-			{
-				this.wallStyle = (prevWall.wallStyle=="wall") ? "opening":"wall" ;
-				if(savedWall.orientation =='h')
-				{	//new section is left : right of prev one
-					this.startX =(this.endX > prevWall.leftSide.x1)  ? this.startX + this.wallWidth:this.startX - this.wallWidth;					
-				}
-				else //wall is Vertical
-				{	//new section is below:above previous one
-					this.startY = (this.endY > prevWall.bottomSide.y1)? this.startY + this.wallWidth : this.startY = this.startY - this.wallWidth;										
-				}
-			}
-		}
-*/
+
 		var rectWallWidth = this.wallWidth;
 		var rectWallHeight = this.wallWidth;
 		
@@ -279,7 +261,8 @@ export default class Wall
 		}
 
 
-		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
+		//var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
+		var textX = new fabric.Text('999', { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
 		if(direction == 'TB' || direction == 'BT')
 		{
 			textX.set({angle:90}); // looks sharper unrotated
@@ -290,9 +273,10 @@ export default class Wall
 		this.canvas.add(textX);
 
 
+		
 
 		//Return an array of the objects so we can delete them if need be
-		var wallContainer = new WallContainer(topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);
+		var wallContainer = new WallContainer(rulerCoordinates,topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;
@@ -337,7 +321,11 @@ class WallContainer
 	wallStyle; /*Wall or opening*/
 	exteriorSide;
 	savedWall;
-	constructor(topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle,direction)
+	x1;//need to save these co-ordinates so we cen reload
+	x2;
+	y1;
+	y2;
+	constructor(rulerCoordinates,topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle,direction)
 	{
 		this.topSide=topSide;
 		this.bottomSide=bottomSide;
@@ -348,6 +336,10 @@ class WallContainer
 		this.orientation = wallOrientation;
 		this.wallStyle = wallStyle;				
 		this.direction = direction;
+		this.x1 = rulerCoordinates.x1;
+		this.y1 = rulerCoordinates.x2;
+		this.x2 = rulerCoordinates.y1;
+		this.y2 = rulerCoordinates.y2;
 	}
 
 
@@ -363,5 +355,18 @@ class WallContainer
 
 }
 
+class RulerCoordinates{
+	x1;
+	y1;
+	x2;
+	y2;
+	constructor(x1,y1,x2,y2)
+	{
+		this.x1 = x1;
+		this.x2 = x2;
+		this.y1 = y1;
+		this.y2 = y2;
+	}
+}
 
 

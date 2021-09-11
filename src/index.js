@@ -3,6 +3,7 @@ import Ruler from './ruler.js'
 import Wall from './wall.js'
 import WallCollection from './wallcollection.js'
 import Wallcontainer from './wall'
+import FileObject from './files'
 const fabric = require("fabric").fabric;
 
 
@@ -20,7 +21,33 @@ function appStart(){
 	var grid = new Grid(canvas);
 
 	zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
-	canvas.add(zoomText);	
+	canvas.add(zoomText);
+	
+	/* Save documents */
+	document.querySelector("#write-button").addEventListener('click', function() {
+		let fo = new FileObject()
+		fo.save(wallCollection);    
+		
+	});
+
+
+	/* Load documents */
+	document.querySelector("#read-button").addEventListener('click', function() {
+
+        if(document.querySelector("#file-input").files.length ==0) {
+            alert('Error : No file selected');
+            return;
+        }
+        else
+        {
+            /* change event fires twice, so check the file has REALLY changed */
+            let fileName = document.querySelector("#file-input").files[0].name;
+			let fo = new FileObject();
+			fo.load(wallCollection);       
+		}
+
+		
+	});
 		
 }
 
@@ -161,7 +188,6 @@ function addWall(o)
 			opt.e.stopPropagation();
 		  })
 		
-
 
 
 	//pass this as a wall container when building our first wall
