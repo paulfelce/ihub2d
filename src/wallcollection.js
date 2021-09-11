@@ -333,7 +333,7 @@ export default class WallCollection
 
 	 get wallCount()
 	 {
-		 return this.walls.length+1;
+		 return this.walls.length;
 	 }
 
 

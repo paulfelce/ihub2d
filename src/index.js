@@ -16,6 +16,7 @@ var snapTarget;
 var ruler;
 
 
+
 function appStart(){
 	
 	var grid = new Grid(canvas);
@@ -24,7 +25,7 @@ function appStart(){
 	canvas.add(zoomText);
 	
 	/* Save documents */
-	document.querySelector("#write-button").addEventListener('click', function() {
+	document.querySelector("#write-button").addEventListener('click', function() {		
 		let fo = new FileObject()
 		fo.save(wallCollection);    
 		
@@ -42,12 +43,23 @@ function appStart(){
         {
             /* change event fires twice, so check the file has REALLY changed */
             let fileName = document.querySelector("#file-input").files[0].name;
-			let fo = new FileObject();
-			fo.load(wallCollection);       
+			let fo = new FileObject();			
+			fo.load(wallCollection);  			
 		}
 
 		
+
 	});
+
+
+	document.addEventListener("fileLoadedEvent", function(evt) {
+		wallCollection = evt.detail;
+		let lastWall =wallCollection.walls[wallCollection.wallCount-1] 		
+		snapTarget =  lastWall.snapTarget;
+		ruler = new Ruler(canvas,snapTarget);
+		ruler.firstSet = true; //we have set the first point so no longer need special calcs
+	}, false);
+
 		
 }
 
@@ -66,7 +78,7 @@ function addWall(o)
 		let allowNew = true;
 		var wallContainer;
 		
-		if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
+		if(wallCollection.wallCount==0)/* haven't got a wall collection to pass. so just pass the snapTarget */
 		{
 			wallContainer = new EmptyContainer(snapTarget);
 		}
@@ -99,7 +111,7 @@ function addWall(o)
 				{
 					var wallContainer; //ruler must have a snapTarget. usually we get this from the walls . but on the first wall we add a fake
 
-					if(wallCollection.wallCount==1)/* haven't got a wall collection to pass. so just pass the snapTarget */
+					if(wallCollection.wallCount==0)/* haven't got a wall collection to pass. so just pass the snapTarget */
 					{
 						wallContainer = new EmptyContainer(snapTarget);					
 					}
@@ -126,24 +138,27 @@ function addWall(o)
 			 //We've clicked the second point so draw the rectangle
 			if(o.button ===1)
 			{
-				if(snapTarget===undefined)
+				if(pointer.y>0) //Don't build a wall if we are saving.
 				{
-					//ruler and first snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
-					
-					//align the snap target to top left
-					let snapX = pointer.x - pointer.x % 50;
-					let snapY = pointer.y - pointer.y % 50;
+					if(snapTarget===undefined)
+					{
+						//ruler and first snapTarget now added with first click. If it's undefined we know we can't draw the ruler or add a wall
+						
+						//align the snap target to top left
+						let snapX = pointer.x - pointer.x % 50;
+						let snapY = pointer.y - pointer.y % 50;
 
-					snapTarget = new fabric.Rect({left:snapX,top:snapY,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
-					snapTarget.set({tag:'first'});				
-					canvas.add(snapTarget);
-					ruler = new Ruler(canvas,snapTarget);
-					ruler.firstSet = true; //we have set the first point so no longer need special calcs
-		
-				}
-				else
-				{
-					addWall(o);
+						snapTarget = new fabric.Rect({left:snapX,top:snapY,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
+						snapTarget.set({tag:'first'});				
+						canvas.add(snapTarget);
+						ruler = new Ruler(canvas,snapTarget);
+						ruler.firstSet = true; //we have set the first point so no longer need special calcs
+			
+					}
+					else
+					{
+						addWall(o);
+					}
 				}
 				
 			}

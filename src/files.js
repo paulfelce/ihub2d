@@ -1,4 +1,4 @@
-
+import Wall from './wall.js';
 export default  class FileObject {
 
 /* load a JSON file stored on the 'browser pc' */
@@ -11,7 +11,7 @@ constructor()
 load(wallCollection)
     {
 
-
+    
 	let reader = new FileReader();
 	reader.addEventListener('load',function(e){
 	let jsondata = e.target.result;
@@ -23,6 +23,11 @@ load(wallCollection)
         let savedWall = savedWalls[savedWallIndex];
         wallCollection.add(savedWall,savedWall.snapTarget);
     }
+    
+
+    //Dispatch an event
+    var evt = new CustomEvent("fileLoadedEvent", {detail: wallCollection});
+    document.dispatchEvent(evt);
 
 	});
 
