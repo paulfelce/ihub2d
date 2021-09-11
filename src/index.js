@@ -62,41 +62,6 @@ function appStart(){
 
 		
 }
-
-function addWall(o)
-{
-	var pointer = canvas.getPointer(o.e);
-	if(!ruler.completed)
-	{	
-		let rulerLoopComplete;
-		rulerLoopComplete = ruler.loopComplete(pointer.x,pointer.y);
-		if(rulerLoopComplete)
-		{
-			ruler.completed = true;
-		}
-
-		let allowNew = true;
-		var wallContainer;
-		
-		if(wallCollection.wallCount==0)/* haven't got a wall collection to pass. so just pass the snapTarget */
-		{
-			wallContainer = new EmptyContainer(snapTarget);
-		}
-		else
-		{
-			wallContainer = wallCollection.lastWall();					
-		}
-		
-		allowNew=ruler.allowNew(pointer,wallContainer)
-		
-		if(allowNew)
-		{
-			snapTarget = wallCollection.add(ruler,snapTarget);	
-			ruler.setStart(pointer,snapTarget); // set the ruler to start on the NEW snaptarget					
-		}
-	
-	}
-}
 		
 	appStart();
 
@@ -203,7 +168,40 @@ function addWall(o)
 			opt.e.stopPropagation();
 		  })
 		
-
+		  function addWall(o)
+		  {
+			  var pointer = canvas.getPointer(o.e);
+			  if(!ruler.completed)
+			  {	
+				  let rulerLoopComplete;
+				  rulerLoopComplete = ruler.loopComplete(pointer.x,pointer.y);
+				  if(rulerLoopComplete)
+				  {
+					  ruler.completed = true;
+				  }
+		  
+				  let allowNew = true;
+				  var wallContainer;
+				  
+				  if(wallCollection.wallCount==0)/* haven't got a wall collection to pass. so just pass the snapTarget */
+				  {
+					  wallContainer = new EmptyContainer(snapTarget);
+				  }
+				  else
+				  {
+					  wallContainer = wallCollection.lastWall();					
+				  }
+				  
+				  allowNew=ruler.allowNew(pointer,wallContainer)
+				  
+				  if(allowNew)
+				  {
+					  snapTarget = wallCollection.add(ruler,snapTarget);	
+					  ruler.setStart(pointer,snapTarget); // set the ruler to start on the NEW snaptarget					
+				  }
+			  
+			  }
+		  }
 
 	//pass this as a wall container when building our first wall
 	class EmptyContainer
