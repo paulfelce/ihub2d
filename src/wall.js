@@ -261,8 +261,8 @@ export default class Wall
 		}
 
 
-		//var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
-		var textX = new fabric.Text('999', { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
+		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
+		//var textX = new fabric.Text('999', { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
 		if(direction == 'TB' || direction == 'BT')
 		{
 			textX.set({angle:90}); // looks sharper unrotated

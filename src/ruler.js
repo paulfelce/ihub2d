@@ -116,7 +116,7 @@ export default class Ruler
 
     }
 
-    setEnd(pointer,lastWall)
+    setEnd(pointer,lastWall,startX,startY)
     {
 
         /*Set orientation based on angle so we can add openings */
@@ -141,7 +141,7 @@ export default class Ruler
         if(!this.completed)
         {
             this.drawRuler(pointer, snapTarget);
-            this.drawGuide(pointer);
+            this.drawGuide(pointer,startX,startY,snapTarget);
         }
         
     }
@@ -165,16 +165,28 @@ export default class Ruler
 
 
     //draw a line showing where pointer would line up
-    drawGuide(pointer)
+    drawGuide(pointer,startX,startY,snapTarget)
     {
             //redraw the guide-line
             if(this.orientation=='h')
             {
                 this.lineGuide.set({x1:pointer.x,x2:pointer.x,y1:0,y2:1200});
+
+                //highlight if we're about to complete the circuit
+                if( Math.abs(this.x2 - (startX + snapTarget.width/2))<3 )
+                {
+                    this.lineGuide.set({stroke: 'green'});
+                }
+                else
+                {
+                    this.lineGuide.set({stroke: 'blue'});
+                }
+
             }
             else
-            {
+            {                
                 this.lineGuide.set({y1:pointer.y,y2:pointer.y,x1:0,x2:1200});
+                
             }
 
     }

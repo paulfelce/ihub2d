@@ -15,6 +15,10 @@ var text;
 var snapTarget;		         
 var ruler;
 
+//track the first point. So we can highlight end
+var startX;
+var startY;
+
 
 
 function appStart(){
@@ -85,7 +89,7 @@ function appStart(){
 						wallContainer = wallCollection.lastWall();					
 					}
 					
-						ruler.setEnd(pointer,wallContainer);
+						ruler.setEnd(pointer,wallContainer,startX,startY);
 				}
 		
 			}
@@ -112,6 +116,10 @@ function appStart(){
 						//align the snap target to top left
 						let snapX = pointer.x - pointer.x % 50;
 						let snapY = pointer.y - pointer.y % 50;
+
+						startX = snapX;
+						startY = snapY;
+
 
 						snapTarget = new fabric.Rect({left:snapX,top:snapY,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
 						snapTarget.set({tag:'first'});				
@@ -196,6 +204,35 @@ function appStart(){
 				  
 				  if(allowNew)
 				  {
+					 //ensure co-ords match up with length shown on screen
+					 //(I'm seeing 2000 as wall length but x2 as 251 (should be 250))
+
+					let tempRuler =ruler;
+					if (tempRuler.orientation =='h')
+					{
+						if (tempRuler.x2>tempRuler.x1)
+						{
+							tempRuler.x2 = tempRuler.x1 + ruler.lineLength/10;
+						}
+						else
+						{
+							tempRuler.x2 = tempRuler.x1 - ruler.lineLength/10;
+						}
+						
+					}
+					else
+					{
+						if (tempRuler.y2>tempRuler.y1)
+						{
+							tempRuler.y2 = tempRuler.y1 + ruler.lineLength/10;
+						}
+						else
+						{
+							tempRuler.y2 = tempRuler.y1 - ruler.lineLength/10;
+						}
+					}
+
+
 					  snapTarget = wallCollection.add(ruler,snapTarget);	
 					  ruler.setStart(pointer,snapTarget); // set the ruler to start on the NEW snaptarget					
 				  }
