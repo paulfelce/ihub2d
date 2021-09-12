@@ -101,7 +101,7 @@ function appStart(){
 						wallContainer = wallCollection.lastWall();		
 						if((pointer.x - startTarget.left) < 25 &&(pointer.y - startTarget.top) < 25)			
 						{
-							startTarget.set({fill:'#00ff00'});
+							startTarget.set({fill:'#00ff00' ,stroke:'white' });
 						}
 						else
 						{
