@@ -99,7 +99,7 @@ function appStart(){
 					else
 					{
 						wallContainer = wallCollection.lastWall();		
-						if(Math.abs(pointer.x - startTarget.left) < 10 && Math.abs(pointer.y - startTarget.top) < 10)			
+						if((pointer.x - startTarget.left) < 25 &&(pointer.y - startTarget.top) < 25)			
 						{
 							startTarget.set({fill:'#00ff00'});
 						}
