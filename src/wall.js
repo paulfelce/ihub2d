@@ -247,6 +247,8 @@ export default class Wall
 		}
 		
 
+
+
 		var midPointX;
 		var midPointY;
 		if(this.wallOrientation == 'h')
@@ -273,8 +275,17 @@ export default class Wall
 		this.canvas.add(textX);
 
 
-		
+		textX.on('mouseover', function () {
+			textX.set({fill:'#00ff00'});
+    		
+		});
 
+		textX.on('mouseout', function () {
+			textX.set({fill:'#000000'});
+    		
+		});
+
+		
 		//Return an array of the objects so we can delete them if need be
 		var wallContainer = new WallContainer(rulerCoordinates,topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
