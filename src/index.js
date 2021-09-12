@@ -141,7 +141,7 @@ function appStart(){
 						startY = snapY;
 
 
-						snapTarget = new fabric.Rect({left:snapX,top:snapY,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue'});	
+						snapTarget = new fabric.Rect({left:snapX,top:snapY,width:25,height:25,fill:"rgba(0,0,0,0)",stroke:'blue',selectable:false});	
 						snapTarget.set({tag:'first'});				
 						canvas.add(snapTarget);
 						ruler = new Ruler(canvas,snapTarget);
@@ -201,13 +201,7 @@ function appStart(){
 			  var pointer = canvas.getPointer(o.e);
 			  if(!ruler.completed)
 			  {	
-				  let rulerLoopComplete;
-				  rulerLoopComplete = ruler.loopComplete(pointer.x,pointer.y);
-				  if(rulerLoopComplete)
-				  {
-					  ruler.completed = true;
-				  }
-		  
+				  
 				  let allowNew = true;
 				  var wallContainer;
 				  
@@ -228,32 +222,42 @@ function appStart(){
 					 //(I'm seeing 2000 as wall length but x2 as 251 (should be 250))
 
 					let tempRuler =ruler;
-					if (tempRuler.orientation =='h')
+					if(startTarget.fill=='#00ff00')//finished
 					{
-						if (tempRuler.x2>tempRuler.x1)
+						//align to first point
+						tempRuler.x2 = startTarget.left + startTarget.width/2;
+						tempRuler.y2 = startTarget.top;
+						ruler.delete();
+
+					}
+					else // not finished 
+					{
+						if (tempRuler.orientation =='h')
 						{
-							tempRuler.x2 = tempRuler.x1 + ruler.lineLength/10;
+							if (tempRuler.x2>tempRuler.x1)
+							{
+								tempRuler.x2 = tempRuler.x1 + ruler.lineLength/10;
+							}
+							else
+							{
+								tempRuler.x2 = tempRuler.x1 - ruler.lineLength/10;
+							}
+							
 						}
 						else
 						{
-							tempRuler.x2 = tempRuler.x1 - ruler.lineLength/10;
-						}
-						
-					}
-					else
-					{
-						if (tempRuler.y2>tempRuler.y1)
-						{
-							tempRuler.y2 = tempRuler.y1 + ruler.lineLength/10;
-						}
-						else
-						{
-							tempRuler.y2 = tempRuler.y1 - ruler.lineLength/10;
+							if (tempRuler.y2>tempRuler.y1)
+							{
+								tempRuler.y2 = tempRuler.y1 + ruler.lineLength/10;
+							}
+							else
+							{
+								tempRuler.y2 = tempRuler.y1 - ruler.lineLength/10;
+							}
 						}
 					}
 
-
-					  snapTarget = wallCollection.add(ruler,snapTarget);	
+					  snapTarget = wallCollection.add(tempRuler,snapTarget);	
 					  ruler.setStart(pointer,snapTarget); // set the ruler to start on the NEW snaptarget					
 				  }
 			  

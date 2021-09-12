@@ -272,6 +272,15 @@ export default class Ruler
 
     }
 
+
+    delete()
+    {
+        this.canvas.remove(this.line);
+        this.canvas.remove(this.lineGuide);
+        this.canvas.remove(this.label);
+        this.completed = true;
+    }
+
 }
 
 
