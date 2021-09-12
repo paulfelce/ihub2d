@@ -264,27 +264,33 @@ export default class Wall
 
 
 		var textX = new fabric.Text(this.lineLength, { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
-		//var textX = new fabric.Text('999', { left: midPointX, top: midPointY, fontSize: 12, selectable: false });				
+				
 		if(direction == 'TB' || direction == 'BT')
 		{
 			textX.set({angle:90}); // looks sharper unrotated
 			textX.set({left:textX.left+15});// rotated will start outside the wall (and wall is narrow)
 		}
 
-		textX.set({tag:'Dimension'});
+
 		this.canvas.add(textX);
 
-
+		/* implement iff we decided to go with change any wall, not just last
 		textX.on('mouseover', function () {
-			textX.set({fill:'#00ff00'});
-    		
+			textX.set({fill:'#00ff00'});   			
+			this.canvas.renderAll();
+			console.log(textX.text);
+			//Dispatch an event			
+			var evt = new CustomEvent("dimensionChangedEvent", {detail: textX});
+			document.dispatchEvent(evt);			
+				
 		});
 
 		textX.on('mouseout', function () {
-			textX.set({fill:'#000000'});
-    		
+			textX.set({fill:'#000000'});    		
+			this.canvas.renderAll();
+			console.log('mouseout');
 		});
-
+		*/
 		
 		//Return an array of the objects so we can delete them if need be
 		var wallContainer = new WallContainer(rulerCoordinates,topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);

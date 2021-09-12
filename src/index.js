@@ -19,6 +19,10 @@ var ruler;
 var startX;
 var startY;
 
+var startTarget;
+
+
+var selectedText; // track the text that the user mouseovered as it defines the wall if they want to resize
 
 
 function appStart(){
@@ -64,7 +68,14 @@ function appStart(){
 		ruler.firstSet = true; //we have set the first point so no longer need special calcs
 	}, false);
 
+	/* this is redundant until we implement changing any wall. Difficulty will be correctly placing all walls
+	   - though can probably do this by knowing which dimension has changed and just recalcuating the start 
+	*/
+	document.addEventListener("dimensionChangedEvent", function(evt) {
+		selectedText = evt.detail; // (determine which wall it is using wallCollection)
 		
+	}, false);
+
 }
 		
 	appStart();
@@ -82,11 +93,20 @@ function appStart(){
 
 					if(wallCollection.wallCount==0)/* haven't got a wall collection to pass. so just pass the snapTarget */
 					{
+						startTarget = snapTarget;
 						wallContainer = new EmptyContainer(snapTarget);					
 					}
 					else
 					{
-						wallContainer = wallCollection.lastWall();					
+						wallContainer = wallCollection.lastWall();		
+						if(Math.abs(pointer.x - startTarget.left) < 10 && Math.abs(pointer.y - startTarget.top) < 10)			
+						{
+							startTarget.set({fill:'#00ff00'});
+						}
+						else
+						{
+							startTarget.set({fill:'#ffffff'});
+						}
 					}
 					
 						ruler.setEnd(pointer,wallContainer,startX,startY);
@@ -130,7 +150,7 @@ function appStart(){
 					}
 					else
 					{
-						addWall(o);
+						addWall(o);						
 					}
 				}
 				

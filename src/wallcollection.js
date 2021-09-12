@@ -228,18 +228,18 @@ export default class WallCollection
 		}
 			
 	}
-	 
-
+	
+	
 	//resize the last Wall
 	resize(){
 		let newDimension = window.prompt("Enter new length in mm");
 		newDimension = newDimension * 0.1; //(canvs is in cm)
-	
+		
 		if (newDimension!=0)//if user has cancelled then we've nothing to do
 		{
 			let wall = this.walls[this.walls.length-1];
 			let snapTarget = wall.snapTarget;		
-			
+			let delta = 0;
 			
 			if(wall.direction=='LR') //LR
 			{
@@ -251,9 +251,10 @@ export default class WallCollection
 				let midX = wall.leftSide.x1 + (wall.rightSide.x1 - wall.leftSide.x1)/2;
 				wall.text.set({text:newDimension,left:midX});
 			}
-			if(wall.direction=='RL') //LR
+			if(wall.direction=='RL') //RL
 			{
-				wall.topSide.set({x1:wall.topSide.x2-newDimension}); 
+				delta = newDimension - (wall.exteriorSide.x2 - wall.exteriorSide.x1)
+				wall.topSide.set({x1:wall.topSide.x1-delta}); 
 				wall.bottomSide.set({x1:wall.topSide.x1}); 
 				wall.leftSide.set({x1:wall.topSide.x1,x2:wall.topSide.x1}); 
 				snapTarget.set({left:wall.topSide.x1});
