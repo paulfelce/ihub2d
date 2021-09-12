@@ -105,7 +105,7 @@ function appStart(){
 						}
 						else
 						{
-							startTarget.set({fill:'#ffffff'});
+							startTarget.set({fill:'rgba(0,0,0,0)'});
 						}
 					}
 					
