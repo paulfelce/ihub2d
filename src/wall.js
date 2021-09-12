@@ -293,7 +293,7 @@ export default class Wall
 		*/
 		
 		//Return an array of the objects so we can delete them if need be
-		var wallContainer = new WallContainer(rulerCoordinates,topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);
+		var wallContainer = new WallContainer(this.lineLength,rulerCoordinates,topside,bottomside,leftside,rightside,rectConnect,textX,this.wallOrientation,this.wallStyle,direction);
 		//var snapTarget = rectConnect;  //lets the ruler know where the start point is
 
 		return wallContainer;
@@ -342,7 +342,8 @@ class WallContainer
 	x2;
 	y1;
 	y2;
-	constructor(rulerCoordinates,topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle,direction)
+	lineLength;
+	constructor(lineLength,rulerCoordinates,topSide,bottomSide,leftSide,rightSide,Snap,Text,wallOrientation,wallStyle,direction)
 	{
 		this.topSide=topSide;
 		this.bottomSide=bottomSide;
@@ -357,6 +358,7 @@ class WallContainer
 		this.y1 = rulerCoordinates.x2;
 		this.x2 = rulerCoordinates.y1;
 		this.y2 = rulerCoordinates.y2;
+		this.lineLength = lineLength;
 	}
 
 
