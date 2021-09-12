@@ -29,8 +29,8 @@ function appStart(){
 	
 	var grid = new Grid(canvas);
 
-	zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
-	canvas.add(zoomText);
+	//zoomText = new fabric.Text('Zoom 100 ', { left: 0, top: 0, fontSize: 12 });					
+	//canvas.add(zoomText);
 	
 	/* Save documents */
 	document.querySelector("#write-button").addEventListener('click', function() {		
@@ -182,6 +182,7 @@ function appStart(){
 
 
 		canvas.on('mouse:wheel', function(opt) {
+			/*
 			var delta = opt.e.deltaY;
 			var zoom = canvas.getZoom();
 			zoom *= 0.999 ** delta;
@@ -194,6 +195,7 @@ function appStart(){
 			zoomText.set({text:"Zoom " + (100*zoom).toFixed(0) , fontSize:fs});
 			opt.e.preventDefault();
 			opt.e.stopPropagation();
+			*/
 		  })
 		
 		  function addWall(o)
